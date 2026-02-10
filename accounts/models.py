@@ -5,9 +5,10 @@ from django.conf import settings
 class Profile(models.Model):
     user = models.OneToOneField(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     phone_number = models.CharField(max_length=20, blank=True)
+    address = models.CharField(max_length=80, blank=True)
 
     def __str__(self):
-        return f"{self.user.get_full_name() or self.user.username} Profile"
+        return self.user.get_full_name() or self.user.username
     
 
 class Dog(models.Model):
