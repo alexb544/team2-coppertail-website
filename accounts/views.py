@@ -1,17 +1,5 @@
 from django.shortcuts import render
-<<<<<<< userloginpage
 from django.contrib.auth.views import LoginView
-
-# Create your views here.
-#def login_view(request):
-   # return render(request, "accounts/login.html")
-
-
-# Custom login view using Django's built-in authentication
-class CustomLoginView(LoginView):
-    template_name = "accounts/login.html"  # points to the login template
-
-=======
 from .models import Profile
 from .models import Dog
 
@@ -31,4 +19,12 @@ def accounts(request):
     }
 
     return render(request, 'accounts/home.html', context)
->>>>>>> development
+
+# Create your views here.
+#def login_view(request):
+   # return render(request, "accounts/login.html")
+
+
+# Custom login view using Django's built-in authentication
+class CustomLoginView(LoginView):
+    template_name = "accounts/login.html"  # points to the login template
