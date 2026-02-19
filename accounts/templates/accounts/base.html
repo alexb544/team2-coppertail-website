@@ -1,0 +1,63 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
+	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
+	<style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+	
+		body {
+			font-family: 'Times New Roman', Times, serif;
+			font-weight: 500;
+			font-size: large;
+			line-height: 1.6;
+			background-color: #DA8A67;
+			padding: 20px;
+		}
+
+		.container {
+			max-width: 900px;
+			margin: 0 auto;
+			background: #C56A39;
+			padding: 30px;
+			border-radius: 8px;
+			box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+		}
+
+		h1 {
+			color: #ececec;
+			margin-bottom: 30px;
+			padding-bottom: 15px;
+			border-bottom: 3px solid #68cba7d1;
+		}
+
+		h2 {
+			color: #ececec;
+		}
+
+		h3 {
+			color: #ececec;
+		}
+
+		.info {
+			background-color: #cce1d3;
+			padding: 15px;
+			border-left: 4px solid #68cba7;
+			margin-bottom: 20px;
+		}
+	</style>
+</head>
+<body>
+	<div class = "container">
+		{% block content %}
+		{% endblock %}
+	</div>
+</body>
+</html>
