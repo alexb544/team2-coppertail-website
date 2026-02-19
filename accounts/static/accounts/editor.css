@@ -3,3 +3,11 @@
     flex-direction: row;
     justify-content: center;
 }
+.header1 {
+    display: flex;
+    justify-content: center;
+}
+.info {
+    display: flex;
+    justify-content: center;
+}
