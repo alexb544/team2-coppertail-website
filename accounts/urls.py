@@ -1,17 +1,11 @@
 from django.urls import path
-<<<<<<< userloginpage
-from .views import CustomLoginView
-
-urlpatterns = [
-    path('login/', CustomLoginView.as_view(), name='login'),
-]
-=======
 from . import views
+from .views import CustomLoginView
 
 # App namespace (for URL reversing)
 app_name = 'accounts'
 
 urlpatterns = {
-        path('', views.accounts, name='accounts'),
+    path('', views.accounts, name='accounts'),
+    path('login/', CustomLoginView.as_view(), name='login'),
 }
->>>>>>> development
