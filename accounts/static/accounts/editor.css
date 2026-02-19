@@ -2,6 +2,7 @@
     display: flex;
     flex-direction: row;
     justify-content: center;
+    align-content: space-between;
 }
 .header1 {
     display: flex;
@@ -10,4 +11,7 @@
 .info {
     display: flex;
     justify-content: center;
+    background-color: #cce1d3;
+	padding: 15px;
+	margin-bottom: 20px;
 }
