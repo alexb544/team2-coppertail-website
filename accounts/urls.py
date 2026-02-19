@@ -5,7 +5,7 @@ from .views import CustomLoginView
 # App namespace (for URL reversing)
 app_name = 'accounts'
 
-urlpatterns = {
+urlpatterns = [
     path('', views.accounts, name='accounts'),
     path('login/', CustomLoginView.as_view(), name='login'),
-}
+]
