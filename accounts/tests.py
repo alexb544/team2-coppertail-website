@@ -19,12 +19,10 @@ class ProfileModelTest(TestCase):
             last_name="Doe"
         )
         #Create a profile for testing that is linked to the user we just created, it is assigned to self.profile so it can be used for all test methods
-        Profile.objects.filter(user=self.user).delete()
-        self.profile = Profile.objects.create(
-            user=self.user,
-            phone_number="123-456-7890",
-            address="123 Main St"
-        )
+        self.profile = self.user.profile
+        self.profile.phone_number = "123-456-7890"
+        self.profile.address = "123 Main St"
+        self.profile.save()
 
     def test_profile_creation(self):
         """Test that a profile is created successfully"""
@@ -43,12 +41,13 @@ class ProfileModelTest(TestCase):
             username="noname",
             password="testpass123"
         )
-        profile = Profile.objects.create(user=user_no_name)
+        profile = user_no_name.profile
         self.assertEqual(str(profile), "noname")
 
     def test_profile_blank_fields(self):
         """Test that phone_number and address can be blank"""
-        profile = Profile.objects.create(user=self.user)
+        user2 = User.objects.create_user(username="blankuser", password="testpass123")
+        profile = user2.profile
         self.assertEqual(profile.phone_number, "")
         self.assertEqual(profile.address, "")
 
@@ -73,10 +72,9 @@ class DogModelTest(TestCase):
             username="dogowner",
             password="testpass123"
         )
-        self.profile = Profile.objects.create(
-            user=self.user,
-            phone_number="123-456-7890"
-        )
+        self.profile = self.user.profile
+        self.profile.phone_number = "123-456-7890"
+        self.profile.save()
         # Create a dog
         self.dog = Dog.objects.create(
             owner=self.profile,
@@ -165,8 +163,8 @@ class ProfileDogIntegrationTest(TestCase):
     def setUp(self):
         self.user1 = User.objects.create_user(username="owner1", password="pass")
         self.user2 = User.objects.create_user(username="owner2", password="pass")
-        self.profile1 = Profile.objects.create(user=self.user1)
-        self.profile2 = Profile.objects.create(user=self.user2)
+        self.profile1 = self.user1.profile
+        self.profile2 = self.user2.profile
 
     def test_different_owners_different_dogs(self):
         """Test that different profiles can have dogs with the same name"""
