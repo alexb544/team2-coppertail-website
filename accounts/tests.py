@@ -19,6 +19,7 @@ class ProfileModelTest(TestCase):
             last_name="Doe"
         )
         #Create a profile for testing that is linked to the user we just created, it is assigned to self.profile so it can be used for all test methods
+        Profile.objects.filter(user=self.user).delete()
         self.profile = Profile.objects.create(
             user=self.user,
             phone_number="123-456-7890",
