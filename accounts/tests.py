@@ -29,7 +29,7 @@ class ProfileModelTest(TestCase):
     def test_profile_creation(self):
         """Test that a profile is created successfully"""
         self.assertEqual(self.profile.user, self.user)
-        self.assertEqual(self.profile.phone_number, "555-1234")
+        self.assertEqual(self.profile.phone_number, "123-456-7890")
         self.assertEqual(self.profile.address, "123 Main St")
 
     def test_profile_str_with_full_name(self):
@@ -75,7 +75,7 @@ class DogModelTest(TestCase):
         )
         self.profile = Profile.objects.create(
             user=self.user,
-            phone_number="555-5678"
+            phone_number="123-456-7890"
         )
         # Create a dog
         self.dog = Dog.objects.create(
