@@ -1,7 +1,7 @@
 #Importing needed classes
 from django.test import TestCase
 from django.contrib.auth import get_user_model
-from myapp.models import Profile, Do
+from accounts.models import Profile, Do
 
 #Assigns the User model to a variable for easy reuse
 User = get_user_model()
