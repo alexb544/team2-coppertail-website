@@ -7,56 +7,38 @@
 	<link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
 	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
 	<style>
-	* {
-		margin: 0;
-		padding: 0;
-		box-sizing: border-box;
-	}
-
-	body {
-		font-family: 'Times New Roman', Times, serif;
-		font-weight: 500;
-		font-size: large;
-		line-height: 1.6;
-		background-color: #DA8A67;
-		padding: 20px;
-	}
-
-	.container {
-		max-width: 900px;
-		margin: 0 auto;
-		background: #C56A39;
-		padding: 30px;
-		border-radius: 8px;
-		box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-	}
-
-	h1 {
-		color: #ececec;
-		padding-left: 5px;
-	}
-
-	h2 {
-		color: #ececec;
-	}
-
-	h3 {
-		color: #ececec;
-	}
-
-	hr {
-		border: none;
-		border-bottom: 3px solid #68cba7d1;
-		margin-bottom: 30px;
-		padding-bottom: 15px;
-	}
-
-	</style>
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+		}
+		</style>
 </head>
 <body>
+	<header>
+		<div class = "centered-title">
+			<img src="../static/accounts/coppertail-grooming-logo.jpg"
+			alt="Coppertail Grooming Logo"
+			height="100"/>
+			<h1>Copper Tail Grooming Co.</h1>
+		</div>
+		<hr>
+		<nav class = "navbar">
+			<ul>
+				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
+				<li> <a class = "header-link" id = "services">Services</a> </li>
+				<li> <a class = "header-link" id = "appointment">Book Now</a> </li>
+				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
+				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
+			</ul>
+		</nav>
+	</header>
+
 	<div class = "container">
 		{% block content %}
 		{% endblock %}
 	</div>
+
+	<footer></footer>
 </body>
 </html>
