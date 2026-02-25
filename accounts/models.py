@@ -12,10 +12,16 @@ class Profile(models.Model):
     
 
 class Dog(models.Model):
+    class Size(models.TextChoices):
+        SMALL = "SMALL", "Small"
+        MEDIUM = "MEDIUM", "Medium"
+        LARGE = "LARGE", "Large"
+
     owner = models.ForeignKey(Profile, on_delete=models.CASCADE, related_name="dogs")
     name = models.CharField(max_length=80)
     breed = models.CharField(max_length=80, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
+    size = models.CharField(max_length=10, choices=Size.choices, default=Size.MEDIUM)
     notes = models.TextField(blank=True)
 
     def __str__(self):
