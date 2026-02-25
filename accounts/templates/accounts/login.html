@@ -1,17 +1,19 @@
-<!DOCTYPE html>
-<html>
-<head>
-    <title>Login</title>
-</head>
-<body>
+{% extends 'accounts/base.html' %}
 
-<h2>Login</h2>
+{% block title %}Login{% endblock %}
 
-<form method="post">
-    {% csrf_token %}
-    {{ form.as_p }}
-    <button type="submit">Login</button>
-</form>
+{% block content %}
+<div class = "login-title">
+    <h1>Welcome back!</h1>
+</div>
+<div class = "login-content">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <button class = "button1" type="submit">Log In</button>
+    </form>
+</div>
 
-</body>
-</html>
+<style>
+</style>
+{% endblock %}
