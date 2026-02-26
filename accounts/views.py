@@ -1,5 +1,7 @@
 from django.shortcuts import render
 from django.contrib.auth.views import LoginView
+from django.contrib import messages # added for success and other alerts
+from .forms import UserRegisterForm 
 from .models import Profile
 from .models import Dog
 
