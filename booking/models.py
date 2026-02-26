@@ -1,6 +1,5 @@
 from django.db import models
 from django.conf import settings
-from django.db.models import Q
 
 
 class TimeSlot(models.Model):
@@ -20,25 +19,25 @@ class Booking(models.Model):
         CONFIRMED = "CONFIRMED", "Confirmed"
         CANCELLED = "CANCELLED", "Cancelled"
 
-    id = models.AutoField(primary_key=True)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE)
     dog = models.ForeignKey("accounts.Dog", on_delete=models.PROTECT)
-    slot = models.OneToOneField(TimeSlot, on_delete=models.PROTECT) # no double bookings
-    services = models.ManyToManyField("services.Service", through="BookingService")
+    slot = models.OneToOneField(TimeSlot, on_delete=models.PROTECT)
+
+    subtotal = models.DecimalField(max_digits=8, decimal_places=2)
+    total = models.DecimalField(max_digits=8, decimal_places=2)
+
     status = models.CharField(max_length=16, choices=Status.choices, default=Status.PENDING)
-
-    # Pricing Estimations
-    subtotal = models.PositiveIntegerField(default=0)
-    tax = models.PositiveIntegerField(default=0)
-    total = models.PositiveIntegerField(default=0)
-    notes = models.TextField(blank=True)
     created_at = models.DateTimeField(auto_now_add=True)
-
-    def __str__(self):
-        return f"Booking #{self.id} - {self.user} - {self.slot.start_time}"
+    
+    notes = models.TextField(blank=True)
     
 
 class BookingService(models.Model):
     booking = models.ForeignKey(Booking, on_delete=models.CASCADE)
     service = models.ForeignKey("services.Service", on_delete=models.PROTECT)
-    price = models.PositiveIntegerField(default=0)
+    price = models.DecimalField(max_digits=8, decimal_places=2)
+
+    class Meta:
+        constraints = [
+            models.UniqueConstraint(fields=["booking", "service"], name="uniq_booking_service"),
+        ]

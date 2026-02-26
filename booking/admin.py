@@ -1,6 +1,5 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from django.db import models
 from .models import Booking, BookingService, TimeSlot
 
 try:
@@ -9,42 +8,28 @@ except admin.sites.NotRegistered:
     pass
 
 
-class DogInline(admin.TabularInline):
-    model = Dog
-    extra = 0
-    formfield_overrides = {
-        models.TextField: {
-            "widget": admin.widgets.AdminTextareaWidget(attrs={"rows": 2, "style": "width: 95%"})
-        }
-    }
-
-
 @admin.register(TimeSlot)
-class ProfileAdmin(admin.ModelAdmin):
-    list_display = ("user", "phone_number", "address")
-    search_fields = (
-        "user__username", 
-        "user__first_name", 
-        "user__last_name", 
-        "user__email",
-        "phone_number",
-        "address",
+class TimeSlotAdmin(admin.ModelAdmin):
+    list_display = (
+        "start_time", 
+        "end_time", 
+        "is_open"
     )
-    inlines = [DogInline]
+    search_fields = ()
 
 
 @admin.register(Booking)
-class DogAdmin(admin.ModelAdmin):
-    list_display = ("name", "owner", "breed", "age")
-    search_fields = (
-        "name",
-        "breed", 
-        "owner__user__first_name",
-        "owner__user__last_name",
+class BookingAdmiin(admin.ModelAdmin):
+    list_display = (
+        "id", 
+        "user", 
+        "dog", 
+        "slot", 
+        "service", 
+        "status",
+        "subtotal",
+        "total", 
+        "notes", 
+        "created_at"
     )
-    list_filter = ("breed",)
-
-
-@admin.register(BookingService)
-class BookingServiceAdmin(admin.ModelAdmin):
-    list_display = ("")
+    search_fields = () 

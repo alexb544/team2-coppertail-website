@@ -5,6 +5,8 @@ SECRET_KEY = 'django-insecure-i*yl9$y*fu1l6u6)o9q=4927r3ed7p28xd%-i6vswb=nn4+=56
 DEBUG = True
 ALLOWED_HOSTS = []
 
+LOGIN_URL = "/login/" # for redirecting to login page
+
 # Application definition
 INSTALLED_APPS = [
     'django.contrib.admin',

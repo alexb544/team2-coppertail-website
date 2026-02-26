@@ -1,11 +1,13 @@
-def estimate_total(services):
-    subtotal = 0
-    for service in services:
-        subtotal += service.base_price  
+from decimal import Decimal
 
-    # TODO: Adjust cost based on the dog's size (req. updating dog model)
+SIZE_MULTIPLIERS = {
+    "SMALL": Decimal("1.00"),
+    "MEDIUM": Decimal("1.20"),
+    "LARGE": Decimal("1.40"),
+}
 
-    tax = int(subtotal * 0.07)  # set your tax rules later
-    total = subtotal + tax
-
-    return subtotal, tax, total
+def estimate_total(dog, services):
+    subtotal = sum((service.base_price for service in services), Decimal("0.00"))    
+    mult = SIZE_MULTIPLIERS.get(getattr(dog, "size", "MEDIUM"), Decimal("1.20"))
+    total = (subtotal * mult).quantize(Decimal("0.01"))
+    return subtotal.quantize(Decimal("0.01")), total

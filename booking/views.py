@@ -3,10 +3,9 @@ from django.db import transaction
 from django.shortcuts import render, redirect, get_object_or_404
 from .forms import BookingCreateForm
 from .models import Booking, TimeSlot, BookingService
-from accounts.models import Dog
 from .pricing import estimate_total
 from services.models import Service
-
+from accounts.models import Dog
 
 @login_required
 def booking_create(request):
@@ -17,15 +16,13 @@ def booking_create(request):
             dog = form.cleaned_data["dog"]
             services = form.cleaned_data["services"]
 
-            subtotal, tax, total = estimate_total(services)
+            subtotal, total = estimate_total(dog, services)
 
-            # stash choices in session for confirm step
             request.session["booking_draft"] = {
                 "slot_id": slot.id,
                 "dog_id": dog.id,
-                "service_ids": [s.id for s in services],
+                "service_ids": [service.id for service in services],
                 "subtotal": subtotal,
-                "tax": tax,
                 "total": total,
             }
             return redirect("booking_confirm")
@@ -42,14 +39,14 @@ def booking_confirm(request):
         return redirect("booking_create")
 
     slot = get_object_or_404(TimeSlot, id=draft["slot_id"], is_open=True)
-    dog = get_object_or_404(Dog, id=draft["dog_id"], user=request.user)
+    dog = get_object_or_404(Dog, id=draft["dog_id"], owner__user=request.user)
 
     services = Service.objects.filter(id__in=draft["service_ids"])
 
     if request.method == "POST":
         # Prevent race conditions
         with transaction.atomic():
-            slot = TimeSlot.objects.select_for_update().get(id=slot.id)
+            slot = TimeSlot.objects.select_for_update().get(id=slot.id) # type: ignore
 
             if not slot.is_open:
                 # someone else took it
@@ -67,7 +64,6 @@ def booking_confirm(request):
                 slot=slot,
                 status=Booking.Status.CONFIRMED,
                 subtotal=draft["subtotal"],
-                tax=draft["tax"],
                 total=draft["total"],
             )
 
@@ -82,7 +78,8 @@ def booking_confirm(request):
             slot.save()
 
         request.session.pop("booking_draft", None)
-        return redirect("booking_success", booking_id=booking.id)
+        
+        return redirect("booking_success", booking_id=booking.id) # type: ignore
 
     return render(request, "booking/booking_confirm.html", {
         "draft": draft,
