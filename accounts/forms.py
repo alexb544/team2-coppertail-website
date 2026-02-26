@@ -1,4 +1,3 @@
-#Imports
 from django import forms
 from django.contrib.auth.forms import UserCreationForm
 from django.contrib.auth.models import User
@@ -11,6 +10,7 @@ class UserRegisterForm(UserCreationForm):
     first_name = forms.CharField(max_length=100)
     last_name = forms.CharField(max_length=100)
 
+
     class Meta:
         model = User
         fields = ['username', 'first_name', 'last_name', 'email']
@@ -18,8 +18,15 @@ class UserRegisterForm(UserCreationForm):
 #Form class for updating profile information
 class ProfileUpdateForm(forms.ModelForm):
     #Handles how the form connects to the Profile model
+
+class UserUpdateForm(forms.ModelForm):
     class Meta:
-        #Alerts that the Profile model is being updated
+        model = User
+        fields = ['username', 'email']
+
+class ProfileUpdateForm(forms.modelForm):
+
+    class Meta:
         model = Profile
         #Specifies what Profile fields are editable
         fields = ["phone_number", "address"]
@@ -49,3 +56,6 @@ class DogUpdateForm(forms.ModelForm): # FIXED: capital M in ModelForm
 
 # DogFormSet logic
 DogFormSet = inlineformset_factory(Profile, Dog, form=DogUpdateForm, extra=0, can_delete=True)
+
+        fields = ['phone', 'profile_picture', 'dog_name', 'dog_breed', 'dog_age']
+

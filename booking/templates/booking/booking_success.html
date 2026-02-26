@@ -1,0 +1,30 @@
+{% extends "booking/base_booking.html" %}
+
+{% block title %}Booking Confirmed{% endblock %}
+
+{% block content %}
+<h2 class="header1">{{ booking.dog.name }} has been Booked!</h2><br>
+
+<div class="info">
+    <p><strong>Booking ID:</strong> {{ booking.id }}</p><br>
+    <p><strong>Arrival Time:</strong> {{ booking.slot.start_time }}</p>
+    <p><strong>Pickup Time:</strong> {{ booking.slot.end_time }}</p><br>
+    <p><strong>Estimated Total:</strong> ${{ booking.total }}</p>
+
+    <div class="actions">
+        <a class="button1" href="{% url 'booking_create' %}">Close</a>
+    </div>
+</div>
+
+<style>
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .actions .button1 {
+        text-decoration: none;
+    }
+</style>
+{% endblock %}

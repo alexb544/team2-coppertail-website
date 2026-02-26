@@ -1,0 +1,57 @@
+{% extends "booking/base_booking.html" %}
+
+{% block title %}Create Booking{% endblock %}
+
+{% block content %}
+<h2 class="header1">Book an Appointment</h2>
+<br>
+
+<div class="info">
+    <form method="post">
+        {% csrf_token %}
+        {{ form.non_field_errors }}
+
+        <p>
+            Select a Time:<br>
+            {{ form.slot }}<br>
+            {{ form.slot.errors }}
+        </p>
+
+        <p>
+            Choose a Dog:<br>
+            {{ form.dog }}<br>
+            {{ form.dog.errors }}
+        </p>
+
+        <p><strong>Select Service(s):</strong></p>
+        <div class="services-group">
+            {{ form.services }}
+            {{ form.services.errors }}
+        </div>
+
+        <div class="actions">
+            <button class="button1" type="submit">Review Booking</button>
+        </div>
+    </form>
+</div>
+
+<style>
+    .actions {
+        display: flex;
+        justify-content: center;
+        margin-top: 10px;
+    }
+
+    .services-group {
+        display: flex;
+        justify-content: center;
+    }
+
+    .services-group ul {
+        display: inline-block;
+        text-align: left;
+        margin: 0;
+        padding-left: 20px;
+    }
+</style>
+{% endblock %}
