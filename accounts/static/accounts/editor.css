@@ -40,6 +40,7 @@ header {
     background-color: #68cba7d1;
 }
 
+
 /* Used in: base.html */
 .centered-title {
     display: flex;
@@ -75,6 +76,7 @@ header {
     justify-content: space-evenly;
 }
 
+
 /* Used in: home.html */
 .header1 {
     display: flex;
@@ -93,11 +95,15 @@ header {
     border-radius: 8px;
 }
 
+
 /* Used in: login.html */
 .login-title {
     display: flex;
     justify-content: center;
     align-items: center;
+}
+.login-title h1 {
+    color: #ececec;
 }
 .login-content {
     display: flex;
@@ -110,4 +116,7 @@ header {
     color: #000000;
     padding: 5px;
     font-size: medium;
+}
+.login-content .button1 {
+    margin: 0 auto;
 }

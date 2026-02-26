@@ -4,16 +4,16 @@
 
 {% block content %}
 <div class = "login-title">
-    <h1>Welcome back!</h1>
+    <h1>Welcome Back!</h1>
 </div>
 <div class = "login-content">
     <form method="post">
+        <br>
         {% csrf_token %}
         {{ form.as_p }}
+        <br>
         <button class = "button1" type="submit">Log In</button>
     </form>
 </div>
 
-<style>
-</style>
 {% endblock %}

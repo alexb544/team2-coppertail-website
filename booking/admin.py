@@ -19,13 +19,12 @@ class TimeSlotAdmin(admin.ModelAdmin):
 
 
 @admin.register(Booking)
-class BookingAdmiin(admin.ModelAdmin):
+class BookingAdmin(admin.ModelAdmin):
     list_display = (
         "id", 
         "user", 
         "dog", 
         "slot", 
-        "service", 
         "status",
         "subtotal",
         "total", 

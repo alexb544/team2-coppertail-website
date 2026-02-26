@@ -12,22 +12,26 @@
 			padding: 0;
 			box-sizing: border-box;
 		}
-		</style>
+		.container {
+            width: min(900px, calc(100% - 40px));
+            margin: 20px auto;
+        }
+	</style>
 </head>
 <body>
 	<header>
 		<div class = "centered-title">
-			<img src="../static/accounts/coppertail-grooming-logo.jpg"
+			<img src="{% static 'accounts/coppertail-grooming-logo.png' %}"
 			alt="Coppertail Grooming Logo"
 			height="100"/>
-			<h1>Copper Tail Grooming Co.</h1>
+			<h1>Coppertail Grooming Co.</h1>
 		</div>
 		<hr>
 		<nav class = "navbar">
 			<ul>
 				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
 				<li> <a class = "header-link" id = "services">Services</a> </li>
-				<li> <a class = "header-link" id = "appointment">Book Now</a> </li>
+				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking_create' %}">Book Now</a> </li>
 				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
 				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
 			</ul>
