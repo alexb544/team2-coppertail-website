@@ -1,4 +1,9 @@
 from pathlib import Path
+import os
+os.environ['DJANGO_EMAIL_BACKEND'] = 'django.core.mail.backends.console.EmailBackend'
+# EMAIL CONFIGURATION
+# Force Django to use the console instead of SMTP
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i*yl9$y*fu1l6u6)o9q=4927r3ed7p28xd%-i6vswb=nn4+=56'
@@ -13,7 +18,6 @@ INSTALLED_APPS = [
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'accounts.apps.AccountsConfig',
     'accounts.apps.AccountsConfig',
     'services.apps.ServicesConfig',
 ]
@@ -78,7 +82,10 @@ USE_I18N = True
 USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
+# Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
 
 LOGIN_REDIRECT_URL = 'accounts:accounts'
 LOGOUT_REDIRECT_URL = 'accounts:accounts'
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30
+

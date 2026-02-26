@@ -1,53 +1,80 @@
-
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
 <head>
-	<meta charset="UTF-8">
-	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
-	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-		</style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
+    <title>{% block title %}Coppertail Grooming{% endblock %}</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        /* Added some basic styling for the logout button to make it look like a link */
+        .nav-link-btn {
+            background: none;
+            border: none;
+            color: blue; /* Change this to match your nav link color */
+            text-decoration: underline;
+            cursor: pointer;
+            font-family: inherit;
+            font-size: inherit;
+        }
+
+        .user-welcome {
+            font-weight: bold;
+            margin-right: 10px;
+        }
+    </style>
 </head>
 <body>
-	<header>
-		<div class = "centered-title">
-			<img src="{% static 'accounts/coppertail-grooming-logo.jpg' %}"
-			alt="Coppertail Grooming Logo"
-			height="100"/>
-			<h1>Copper Tail Grooming Co.</h1>
-		</div>
-		<hr>
-		<nav class = "navbar">
-			<ul>
-				<li> <a class="header-link" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
-    <li> <a class="header-link" id="services">Services</a> </li>
-    <li> <a class="header-link" id="appointment">Book Now</a> </li>
-    <li> <a class="header-link" id="contact">Contact Us</a> </li>
-    <li> <a class="header-link" id="login-link" href="{% url 'accounts:login' %}">Log In</a> </li>
-    <li> <a class="header-link" id="register-link" href="{% url 'accounts:register' %}">Sign Up</a> </li>
-			</ul>
-		</nav>
-	</header>
+    <header>
+        <div class="centered-title">
+            <img src="{% static 'accounts/coppertail-grooming-logo.jpg' %}"
+            alt="Coppertail Grooming Logo"
+            height="100"/>
+            <h1>Copper Tail Grooming Co.</h1>
+        </div>
+        <hr>
+      <nav class="navbar">
+    <ul>
+        <li><a href="{% url 'accounts:accounts' %}">Home</a></li>
+        <li><a href="{% url 'accounts:services' %}">Services</a></li>
+        <li> <a class = "header-link" id = "appointment">Book Now</a> </li>
+        <li> <a class = "header-link" id = "contact">Contact Us</a> </li>
+        
+        {% if user.is_authenticated %}
+            <li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
+            <li>
+                <form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
+                    {% csrf_token %}
+                    <button type="submit" class="nav-link-btn">Log Out</button>
+                </form>
+            </li>
+        {% else %}
+            <li><a href="{% url 'accounts:login' %}">Log In</a></li>
+            <li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
+        {% endif %}
+    </ul>
+</nav>
+    </header>
 
-	<div class = "container">
-		{% if messages %}
+    <div class="container">
+        {% if messages %}
             {% for message in messages %}
-                <div style="padding: 20px; background-color: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+                <div style="padding: 15px; background-color: #d9edf7; border: 1px solid #bce8f1; color: #31708f; margin: 20px auto; border-radius: 4px; text-align: center; max-width: 600px;">
                     {{ message }}
                 </div>
             {% endfor %}
         {% endif %}
-		{% block content %}
-		{% endblock %}
-	</div>
 
-	<footer></footer>
+        {% block content %}
+        {% endblock %}
+    </div>
+
+    <footer></footer>
 </body>
 </html>
