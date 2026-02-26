@@ -1,9 +1,22 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect # Added redirect
 from django.contrib.auth.views import LoginView
 from django.contrib import messages # added for success and other alerts
 from .forms import UserRegisterForm 
 from .models import Profile
 from .models import Dog
+
+def register(request):
+    """View for user registration"""
+    if request.method == 'POST':
+        form = UserRegisterForm(request.POST)
+        if form.is_valid():
+            form.save()
+            username = form.cleaned_data.get('username')
+            messages.success(request, f'Account created for {username}! You can now login.')
+            return redirect('accounts:login')
+    else:
+        form = UserRegisterForm()
+    return render(request, 'accounts/register.html', {'form': form})
 
 def accounts(request):
     """Display all account information (i.e. name, email, dog information)"""

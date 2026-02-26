@@ -14,6 +14,8 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'accounts.apps.AccountsConfig',
+    'accounts.apps.AccountsConfig',
+    'services.apps.ServicesConfig',
 ]
 
 MIDDLEWARE = [
@@ -77,3 +79,6 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+
+LOGIN_REDIRECT_URL = 'accounts:accounts'
+LOGOUT_REDIRECT_URL = 'accounts:accounts'

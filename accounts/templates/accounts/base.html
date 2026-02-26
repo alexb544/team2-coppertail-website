@@ -1,3 +1,4 @@
+
 {% load static %}
 <!DOCTYPE html>
 <html lang="en">
@@ -17,7 +18,7 @@
 <body>
 	<header>
 		<div class = "centered-title">
-			<img src="../static/accounts/coppertail-grooming-logo.jpg"
+			<img src="{% static 'accounts/coppertail-grooming-logo.jpg' %}"
 			alt="Coppertail Grooming Logo"
 			height="100"/>
 			<h1>Copper Tail Grooming Co.</h1>
@@ -25,16 +26,24 @@
 		<hr>
 		<nav class = "navbar">
 			<ul>
-				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
-				<li> <a class = "header-link" id = "services">Services</a> </li>
-				<li> <a class = "header-link" id = "appointment">Book Now</a> </li>
-				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
-				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
+				<li> <a class="header-link" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
+    <li> <a class="header-link" id="services">Services</a> </li>
+    <li> <a class="header-link" id="appointment">Book Now</a> </li>
+    <li> <a class="header-link" id="contact">Contact Us</a> </li>
+    <li> <a class="header-link" id="login-link" href="{% url 'accounts:login' %}">Log In</a> </li>
+    <li> <a class="header-link" id="register-link" href="{% url 'accounts:register' %}">Sign Up</a> </li>
 			</ul>
 		</nav>
 	</header>
 
 	<div class = "container">
+		{% if messages %}
+            {% for message in messages %}
+                <div style="padding: 20px; background-color: #fcf8e3; border: 1px solid #faebcc; color: #8a6d3b; margin-bottom: 20px; border-radius: 5px; text-align: center;">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
 		{% block content %}
 		{% endblock %}
 	</div>
