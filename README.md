@@ -12,13 +12,13 @@ Follows Agile development practices with two week sprints focused on planning, d
 **Features:**
 - [x] Account Creation
 - [ ] Service Creation
-- [ ] Appointment Tracking 
-- [ ] Appointment Booking
+- [x] Appointment Tracking 
+- [x] Appointment Booking
 
 **Webpages:**
 - [x] Home
 - [x] Log-in
-- [ ] Sign-up
+- [x] Sign-up
 - [ ] Services
 - [ ] About Us 
 

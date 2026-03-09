@@ -1,16 +1,11 @@
-#Importing needed classes
 from django.test import TestCase
 from django.contrib.auth import get_user_model
 from accounts.models import Profile, Dog
 
-#Assigns the User model to a variable for easy reuse
 User = get_user_model()
 
-#A test case class for testing the Profile model, it inherits from TestCase
 class ProfileModelTest(TestCase):
-    #A method that sets up inital data needed for all tests
     def setUp(self):
-        #Create a user for testing and assigns it to self.user so it can be used for all test methods
         self.user = User.objects.create_user(
             username="testuser",
             email="test@example.com",
@@ -18,7 +13,6 @@ class ProfileModelTest(TestCase):
             first_name="John",
             last_name="Doe"
         )
-        #Create a profile for testing that is linked to the user we just created, it is assigned to self.profile so it can be used for all test methods
         self.profile = self.user.profile
         self.profile.phone_number = "123-456-7890"
         self.profile.address = "123 Main St"

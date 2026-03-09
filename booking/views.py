@@ -1,5 +1,3 @@
-from decimal import Decimal
-
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.shortcuts import get_object_or_404, redirect, render
@@ -10,7 +8,7 @@ from services.models import Service
 from .forms import BookingCreateForm
 from .models import Booking, BookingService, TimeSlot
 from .pricing import estimate_total
-
+from decimal import Decimal
 
 @login_required
 def booking_create(request):
