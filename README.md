@@ -11,7 +11,7 @@ Follows Agile development practices with two week sprints focused on planning, d
 ## Current Goals
 **Features:**
 - [x] Account Creation
-- [ ] Service Creation
+- [X] Service Creation
 - [x] Appointment Tracking 
 - [x] Appointment Booking
 
@@ -19,7 +19,8 @@ Follows Agile development practices with two week sprints focused on planning, d
 - [x] Home
 - [x] Log-in
 - [x] Sign-up
-- [ ] Services
+- [X] Services
+- [X] Appointment Page
 - [ ] About Us 
 
 ## Technologies Used
@@ -50,18 +51,22 @@ source .venv\Scripts\activate
 ```sh
 pip install -r requirements.txt
 ```
+### 4. Make Migrations
+```sh
+python manage.py makemigrations
+```
 
-### 4. Apply Migrations
+### 5. Apply Migrations
 ```sh
 python manage.py migrate
 ```
 
-### 5. Run the Development Server
+### 6. Run the Development Server
 ```sh
 python manage.py runserver
 ```
 
-### 6. Follow the Link provided to open in your Browser:
+### 7. Follow the Link provided to open in your Browser:
 ```sh
 http://127.0.0.1:8000/
 ```
