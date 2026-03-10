@@ -1,6 +1,6 @@
 from django.contrib import admin
 from django.contrib.auth.models import Group
-from .models import Booking, BookingService, TimeSlot
+from .models import Booking, TimeSlot
 
 try:
     admin.site.unregister(Group)
