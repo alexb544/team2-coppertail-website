@@ -5,4 +5,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path("booking/", include("booking.urls")),
     path('', include('accounts.urls')),  # this line connects to the login page(hopefully)
+    path('services/', include('services.urls')),
 ]
