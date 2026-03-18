@@ -1,0 +1,22 @@
+{% extends 'services/../../../accounts/templates/accounts/base.html' %}
+
+{% block title %}{{ page_title }}{% endblock %}
+
+{% block content %}
+{% if services %}
+    {% for service in services %}
+<h2 class = "header1">What We Offer</h2>
+<h3>{{ service_name }}</h3>
+<div class="flex">
+    <div>{{ description }}</div>
+    <div>{{ base_price }}</div>
+</div>
+    {% endfor %}
+{% else %}
+<h2 class="header1">Ruh roh!</h2>
+<div class="info">
+    <p style="text-align: left;" class = "ad1">We're sorry! It looks like we haven't included anything here yet. Please check back again later!</p>
+</div>
+{% endif %}
+
+{% endblock %}

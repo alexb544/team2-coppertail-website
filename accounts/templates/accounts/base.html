@@ -31,7 +31,7 @@
 		<nav class = "navbar">
 			<ul>
 				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
-				<li> <a class = "header-link" id = "services">Services</a> </li>
+				<li> <a class = "header-link" id = "services" href = "http://127.0.0.1:8000/services">Services</a> </li>
 				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking_create' %}">Book Now</a> </li>
 				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
 				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
@@ -42,7 +42,7 @@
 	<div class = "container">
 		{% if messages %}
             {% for message in messages %}
-                <div style="""
+                <div style="
 					padding: 20px; 
 					background-color: #fcf8e3; 
 					border: 1px solid #faebcc; 
@@ -50,7 +50,7 @@
 					margin-bottom: 20px; 
 					border-radius: 5px; 
 					text-align: center;
-					""">{{ message }}
+					">{{ message }}
                 </div>
             {% endfor %}
         {% endif %}
