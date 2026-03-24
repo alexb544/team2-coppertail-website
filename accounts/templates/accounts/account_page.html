@@ -1,0 +1,260 @@
+{% extends 'accounts/base.html' %}
+{% block title %}My Account{% endblock %}
+{% block content %}
+
+<style>
+    .page-container {
+        display: flex;
+        min-height: 80vh;
+        gap: 20px;
+        padding: 0;
+    }
+
+    .sidebar {
+        width: 280px;
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        padding-bottom: 70px;
+        box-shadow: 10px 5px 8px rgba(0,0,0,0.08);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        position: relative;
+    }
+
+    .profile-pic {
+        width: 160px;
+        height: 160px;
+        border-radius: 50%;
+        object-fit: cover;
+        background-color: #ddd;
+        margin-bottom: 15px;
+    }
+
+    .user-info {
+        width: 100%;
+        text-align: center;
+    }
+
+    .user-info h2 {
+        margin-bottom: 25px;
+        color: #000000;
+    }
+
+    .user-info p {
+        text-align: left;
+        margin-top: 15px;
+        font-size: 15px;
+    }
+
+    .main-content {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        gap: 25px;
+    }
+
+    .section-box {
+        background-color: #fff;
+        border-radius: 12px;
+        padding: 25px;
+        padding-top: 20px;
+        padding-bottom: 70px;
+        box-shadow: 10px 5px 8px rgba(0,0,0,0.08);
+        position: relative;
+        min-height: 220px;
+    }
+
+    .section-box h3 {
+        margin-bottom: 20px;
+        font-size: 22px;
+        color: #000000dc;
+    }
+
+    .appointments-list {
+        display: flex;
+        flex-direction: row;
+        gap: 15px;
+    }
+
+    .appointment-card {
+        padding: 15px;
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        background-color: #fafafa;
+        text-align: left;
+    }
+
+    .appointment-card p {
+        margin-bottom: 6px;
+        text-align: left;
+    }
+
+    .dogs-grid {
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 20px;
+    }
+
+    .dog-card {
+        border: 1px solid #ddd;
+        border-radius: 10px;
+        padding: 15px;
+        background-color: #fafafa;
+        text-align: right;
+    }
+    .dog-card h4 {
+        text-align: center;
+        margin-bottom: 10px;
+    }
+
+    .dog-card p {
+        text-align: left;
+    }
+
+    .dog-card img {
+        width: 100%;
+        max-width: 120px;
+        height: 120px;
+        object-fit: cover;
+        border-radius: 10px;
+        background-color: #ddd;
+        margin-bottom: 12px;
+    }
+
+    .empty-message {
+        color: #777;
+        font-style: italic;
+    }
+
+    .section-action {
+        position: absolute;
+        right: 25px;
+        bottom: 20px;
+    }
+
+    .action-button {
+        display: inline-block;
+        padding: 10px 16px;
+        background-color: #333;
+        color: #fff;
+        text-decoration: none;
+        border-radius: 8px;
+        font-size: 14px;
+        transition: background-color 0.2s ease;
+    }
+
+    .action-button:hover {
+        background-color: #555;
+    }
+
+    @media (max-width: 900px) {
+        .page-container {
+            flex-direction: column;
+        }
+        .sidebar {
+            width: 100%;
+        }
+        .dogs-grid {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+
+    @media (max-width: 600px) {
+        .dogs-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .section-action {
+            position: static;
+            margin-top: 20px;
+            text-align: right;
+        }
+    }
+</style>
+
+<div class="page-container">
+
+    <aside class="sidebar">
+        {% if profile.profile_picture %}
+            <img src="{{ profile.profile_picture.url }}" alt="Profile Picture" class="profile-pic">
+        {% else %}
+            <div class="profile-pic"></div>
+        {% endif %}
+
+        <div class="user-info">
+            <h2>{{ user.get_full_name|default:user.username }}</h2>
+            <p><strong>Username: </strong>{{ user.username }}</p>
+            <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
+            <p><strong>Email:</strong> {{ user.email }}</p>
+            <p><strong>Address:</strong> {{ profile.address }}</p>
+            <div class="section-action">
+                <a href="{% url 'accounts:edit_account' %}" class="action-button">Edit your profile</a>
+            </div>
+        </div>
+    </aside>
+
+
+    <main class="main-content">
+        <section class="section-box">
+            <h3>Upcoming Appointments</h3>
+            
+            {% if bookings %}
+                <div class="appointments-list">
+                    {% for booking in bookings %}
+                        <div class="appointment-card">
+                            <p><strong><center>{{ booking.dog.name }}</center></strong></p>
+                            <p><strong>Date:</strong> {{ booking.slot.start_time.date }}</p>
+                            <p><strong>Time:</strong> {{ booking.slot.start_time.time }}</p>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-message">You have no upcoming appointments.</p>
+            {% endif %}
+
+            <div class="section-action">
+                <a href="{% url 'booking:booking_create' %}" class="action-button">Book an Appointment</a>
+            </div>
+        </section>
+
+
+        <section class="section-box">
+            <h3>My Dogs</h3>
+
+            {% if dogs %}
+                <div class="dogs-grid">
+                    {% for dog in dogs %}
+                        <div class="dog-card">
+                            {% if dog.image %}
+                                <img src="{{ dog.image.url }}" alt="{{ dog.name }}">
+                            {% else %}
+                                <div style="
+                                    width:120px; 
+                                    height:120px; 
+                                    background:#ddd; 
+                                    border-radius:10px; 
+                                    margin:0 auto 12px 
+                                    auto;">
+                                </div>
+                            {% endif %}
+                            <h4><strong>{{ dog.name }}</strong></h4>
+                            <p><strong>Breed:</strong> {{ dog.breed }}</p>
+                            <p><strong>Age:</strong> {{ dog.age }}</p>
+                            <a href="{% url 'accounts:edit_dog' dog.id %}" class="action-button">Edit Dog</a>
+                        </div>
+                    {% endfor %}
+                </div>
+            {% else %}
+                <p class="empty-message">You haven't added any dogs to your account.</p>
+            {% endif %}
+            <div class="section-action">
+                    <a href="{% url 'accounts:add_dog' %}" class="action-button">Add Dog</a>
+            </div>
+        </section>
+
+    </main>
+</div>
+
+{% endblock %}

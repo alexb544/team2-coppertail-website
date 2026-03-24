@@ -1,4 +1,4 @@
-{% extends "booking/base_booking.html" %}
+{% extends 'booking/../../../accounts/templates/accounts/base.html' %}
 
 {% block title %}Booking Confirmed{% endblock %}
 
@@ -12,7 +12,7 @@
     <p><strong>Estimated Total:</strong> ${{ booking.total }}</p>
 
     <div class="actions">
-        <a class="button1" href="{% url 'booking_create' %}">Close</a>
+        <a class="button1" href="{% url 'booking:booking_create' %}">Close</a>
     </div>
 </div>
 

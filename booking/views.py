@@ -28,7 +28,7 @@ def booking_create(request):
                 "subtotal": str(subtotal),
                 "total": str(total),
             }
-            return redirect("booking_confirm")
+            return redirect("booking:booking_confirm")
     else:
         form = BookingCreateForm(user=request.user)
 
@@ -82,7 +82,7 @@ def booking_confirm(request):
             slot.save()
 
         request.session.pop("booking_draft", None)
-        return redirect("booking_success", booking_id=booking.id)
+        return redirect("booking:booking_success", booking_id=booking.id)
 
     return render(
         request,
