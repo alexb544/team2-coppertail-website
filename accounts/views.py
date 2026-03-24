@@ -1,9 +1,10 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import get_object_or_404, render, redirect
 from django.contrib.auth.views import LoginView
-from django.contrib import messages 
-from .forms import UserRegisterForm 
-from .models import Profile
-from .models import Dog
+from django.contrib.auth.decorators import login_required
+from django.contrib import messages
+from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, DogForm
+from .models import Profile, Dog
+from booking.models import Booking
 
 
 class CustomLoginView(LoginView):
@@ -37,3 +38,79 @@ def accounts(request):
     return render(request, 'accounts/home.html', context)
 
 
+@login_required
+def user_account(request):
+    profile = Profile.objects.get(user=request.user)
+    dogs = profile.dogs.all() 
+    bookings = Booking.objects.filter(user=request.user).order_by('slot')
+
+    return render(request, "accounts/account_page.html", {
+        'user': request.user,
+        'profile': profile,
+        'dogs': dogs,
+        'bookings': bookings,
+    })
+
+
+@login_required
+def edit_account(request):
+    profile = Profile.objects.get(user=request.user)
+
+    if request.method == "POST":
+        user_form = UserUpdateForm(request.POST, instance=request.user)
+        profile_form = ProfileUpdateForm(request.POST, instance=profile)
+
+        if user_form.is_valid() and profile_form.is_valid():
+            user_form.save()
+            profile_form.save()
+            return redirect("accounts:account")
+        
+    else: 
+        user_form = UserUpdateForm(instance=request.user)
+        profile_form = ProfileUpdateForm(instance=profile)
+
+    return render(request, "accounts/edit_account.html", {
+        "user_form": user_form,
+        "profile_form": profile_form,
+    })
+
+
+@login_required
+def add_dog(request):
+    profile, created = Profile.objects.get_or_create(user=request.user)
+    
+    if request.method == "POST":
+        form = DogForm(request.POST)
+
+        if form.is_valid():
+            dog = form.save(commit=False)
+            dog.owner = profile
+            dog.save()
+            return redirect("accounts:account")
+        
+    else:
+        form = DogForm()
+        
+    return render(request, "accounts/add_dog.html", {
+        "form": form
+    })
+
+
+@login_required
+def edit_dog(request, dog_id):
+    profile = Profile.objects.get(user=request.user)
+    dog = get_object_or_404(Dog, id=dog_id, owner=profile)
+
+    if request.method == "POST":
+        form = DogForm(request.POST, instance=dog)
+
+        if form.is_valid():
+            form.save()
+            return redirect("accounts:account")
+    else:
+        form = DogForm(instance=dog)
+
+    return render(request, "accounts/edit_dog.html", {
+        "form": form,
+        "dog": dog,
+    })

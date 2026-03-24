@@ -14,9 +14,10 @@
 			box-sizing: border-box;
 		}
 		.container {
-            width: min(900px, calc(100% - 40px));
-            margin: 20px auto;
-        }
+			width: 65%;
+			max-width: 1600px;
+			margin: 20px auto;
+		}
 	</style>
 </head>
 <body>
@@ -32,9 +33,10 @@
 			<ul>
 				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
 				<li> <a class = "header-link" id = "services" href = "http://127.0.0.1:8000/services">Services</a> </li>
-				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking_create' %}">Book Now</a> </li>
+				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking:booking_create' %}">Book Now</a> </li>
 				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
 				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
+				<li> <a class = "header-link" id = "account-page" href = "{% url 'accounts:account' %}">My Account</a> </li>
 			</ul>
 		</nav>
 	</header>
