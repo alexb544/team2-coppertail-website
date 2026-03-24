@@ -5,7 +5,7 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
 	<style>
 		* {
@@ -15,70 +15,35 @@
 		}
 		.container {
             width: min(900px, calc(100% - 40px));
-            margin: 20px auto;
+            margin: 20px auto; 
         }
-
-		.nav-link-btn {
-			background: none;
-			border: none;
-			color: #007bff;
-			text-decoration: underline;
-			cursor: pointer;
-			font-family: inherit;
-			font-size: inherit;
-			padding: 0;
-		}
-.user-welcome {
-    font-weight: bold;
-    margin-right: 10px;
-}
 	</style>
 </head>
 <body>
 	<header>
-		<div class = "centered-title">
-			<img src="{% static 'accounts/coppertail-grooming-logo.png' %}"
-			alt="Coppertail Grooming Log"
-			height="100"/>
-			<h1>Coppertail Grooming Co.</h1>
+		<div class="flex justify-between mx-5">
+			<img class="h-20" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
+			<ul class="list-inside overflow-hidden flex justify-between text-black hover:#C56A39">
+				<li> <a class="header-link" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
+				<li> <a class="header-link" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
+				<li> <a class="header-link" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
+				<li> <a class="header-link" id="contact">Contact Us</a> </li>
+				{% if user.is_authenticated %}
+					<li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
+					<li> <a class="header-link" id="account-page" href="{% url 'accounts:account' %}">My Account</a> </li>
+					<li>
+						<form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
+							{% csrf_token %}
+							<button type="submit" class="nav-link-btn">Log Out</button>
+						</form>
+					</li>
+				{% else %}
+					<li><a href="{% url 'accounts:login' %}">Log In</a></li>
+					<li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
+				{% endif %}
+			</ul>
 		</div>
 		<hr>
-	<!-- servies link may break
-		<nav class = "navbar">
-			<ul>
-				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
-				<li> <a class = "header-link" id = "services" href = "http://127.0.0.1:8000/services">Services</a> </li>
-				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking:booking_create' %}">Book Now</a> </li>
-				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
-				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
-			</ul>
-		</nav>
-	-->
-		<!-- I had to get rid of the hard links because they were device specific and breaking on other devices i believe -->
-		<nav class="navbar">
-    	<ul>
-			<li> <a class="header-link" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
-
-			<li> <a class="header-link" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
-
-			<li> <a class="header-link" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
-			<li> <a class="header-link" id="contact">Contact Us</a> </li>
-
-			{% if user.is_authenticated %}
-    <li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
-    <li> <a class="header-link" id="account-page" href="{% url 'accounts:account' %}">My Account</a> </li>
-    <li>
-        <form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="nav-link-btn">Log Out</button>
-        </form>
-    </li>
-{% else %}
-    <li><a href="{% url 'accounts:login' %}">Log In</a></li>
-    <li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
-{% endif %}
-    	</ul>
-	</nav>
 	</header>
 
 	<div class = "container">
