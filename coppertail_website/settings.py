@@ -1,10 +1,11 @@
 from pathlib import Path
-
+import os
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i*yl9$y*fu1l6u6)o9q=4927r3ed7p28xd%-i6vswb=nn4+=56'
 DEBUG = True
 ALLOWED_HOSTS = []
-LOGIN_URL = "/login/" # for redirecting to login page
+#LOGIN_URL = "/login/" # for redirecting to login page
 
 INSTALLED_APPS = [
     'django.contrib.admin',
@@ -79,3 +80,8 @@ USE_TZ = True
 
 # Static files (CSS, JavaScript, Images)
 STATIC_URL = 'static/'
+
+LOGIN_URL = 'accounts:login'           # Tells Django where the login page is
+LOGIN_REDIRECT_URL = 'accounts:account' # Redirect to profile after login
+LOGOUT_REDIRECT_URL = 'accounts:login'  # Redirect back to login after logout
+SESSION_COOKIE_AGE = 60 * 60 * 24 * 30 # remembers user for 30 days

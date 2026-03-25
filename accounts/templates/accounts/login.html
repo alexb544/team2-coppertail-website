@@ -8,6 +8,39 @@
     <h1>Welcome Back!</h1>
 </div>
 
+<div class="form-container">
+    <form method="POST">
+        {% csrf_token %}
+        <h2>Sign In</h2>
+        
+        <div class="form-group mb-3">
+            {{ form.username.label_tag }}
+            {{ form.username }}
+        </div>
+
+        <div class="form-group mb-3">
+            {{ form.password.label_tag }}
+            {{ form.password }}
+        </div>
+
+        <div class="form-check mb-3 text-start"> 
+            {{ form.remember_me }}
+            <label class="form-check-label" for="id_remember_me" style="margin-left: 5px;">
+                Remember Me
+            </label>
+        </div>
+
+        <button class="button1" type="submit">Login</button>
+    </form>
+    
+    <div class="border-top pt-3">
+        <small class="text-muted">
+            Need An Account? <a class="ml-2" href="{% url 'accounts:register' %}">Sign Up Now</a> |
+            <a href="{% url 'accounts:password_reset' %}">Forgot Password?</a>
+        </small>
+    </div>
+</div>
+<!--
 <div class = "login-content">
     <form method="post">
         <br>
@@ -20,5 +53,6 @@
         </button>
     </form>
 </div>
+-->
 
 {% endblock %}

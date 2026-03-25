@@ -1,0 +1,12 @@
+{% extends "accounts/base.html" %}
+{% block content %}
+    <div class="form-container text-center">
+        <h2>You have been logged out.</h2>
+        <p>Thanks for visiting Coppertail Grooming!</p>
+        <div class="border-top pt-3">
+            <small class="text-muted">
+                <a href="{% url 'accounts:login' %}">Log In Again</a>
+            </small>
+        </div>
+    </div>
+{% endblock content %}
