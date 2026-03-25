@@ -48,7 +48,7 @@
 			<ul>
 				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
 				<li> <a class = "header-link" id = "services" href = "http://127.0.0.1:8000/services">Services</a> </li>
-				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking_create' %}">Book Now</a> </li>
+				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking:booking_create' %}">Book Now</a> </li>
 				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
 				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
 			</ul>
@@ -65,17 +65,18 @@
 			<li> <a class="header-link" id="contact">Contact Us</a> </li>
 
 			{% if user.is_authenticated %}
-				<li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
-				<li>
-					<form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
-						{% csrf_token %}
-						<button type="submit" class="nav-link-btn">Log Out</button>
-					</form>
-				</li>
-			{% else %}
-				<li><a href="{% url 'accounts:login' %}">Log In</a></li>
-				<li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
-			{% endif %}
+    <li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
+    <li> <a class="header-link" id="account-page" href="{% url 'accounts:account' %}">My Account</a> </li>
+    <li>
+        <form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
+            {% csrf_token %}
+            <button type="submit" class="nav-link-btn">Log Out</button>
+        </form>
+    </li>
+{% else %}
+    <li><a href="{% url 'accounts:login' %}">Log In</a></li>
+    <li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
+{% endif %}
     	</ul>
 	</nav>
 	</header>

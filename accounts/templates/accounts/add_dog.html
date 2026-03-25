@@ -1,0 +1,114 @@
+{% extends "accounts/base.html" %}
+{% block title %}Add Dog{% endblock %}
+{% block content %}
+<style>
+    .form-container {
+        max-width: 700px;
+        margin: 30px auto;
+        background: #fcf8e3;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 10px 5px 8px rgba(0,0,0,0.08);
+    }
+
+    .form-container h1 {
+        margin-bottom: 20px;
+    }
+
+    .form-group {
+        margin-bottom: 18px;
+    }
+
+    label {
+        display: block;
+        font-weight: bold;
+        margin-bottom: 8px;
+    }
+
+    .form-control,
+    select,
+    textarea,
+    input[type="text"],
+    input[type="number"] {
+        width: 100%;
+        padding: 10px;
+        border: 1px solid #ccc;
+        border-radius: 8px;
+    }
+
+    .button-row {
+        display: flex;
+        gap: 12px;
+        margin-top: 20px;
+    }
+
+    .btn {
+        display: inline-block;
+        padding: 10px 16px;
+        border-radius: 8px;
+        text-decoration: none;
+        border: none;
+        cursor: pointer;
+        font-size: 14px;
+    }
+
+    .btn-save {
+        background: #333;
+        color: white;
+    }
+
+    .btn-cancel {
+        background: #ddd;
+        color: #222;
+    }
+
+    .errorlist {
+        color: #b00020;
+        margin: 6px 0 0 0;
+        padding-left: 18px;
+    }
+</style>
+
+<div class="form-container">
+    <h1>Add a Dog</h1>
+
+    <form method="post">
+        {% csrf_token %}
+
+        <div class="form-group">
+            <label for="{{ form.name.id_for_label }}">Name</label>
+            {{ form.name }}
+            {{ form.name.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.breed.id_for_label }}">Breed</label>
+            {{ form.breed }}
+            {{ form.breed.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.age.id_for_label }}">Age</label>
+            {{ form.age }}
+            {{ form.age.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.size.id_for_label }}">Size</label>
+            {{ form.size }}
+            {{ form.size.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.notes.id_for_label }}">Notes</label>
+            {{ form.notes }}
+            {{ form.notes.errors }}
+        </div>
+
+        <div class="button-row">
+            <button type="submit" class="btn btn-save">Add Dog</button>
+            <a href="{% url 'accounts:account' %}" class="btn btn-cancel">Cancel</a>
+        </div>
+    </form>
+</div>
+{% endblock %}

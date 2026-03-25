@@ -31,4 +31,8 @@ path('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.htm
      
    
     path('services/', views.services_view, name='services'),
+    path('account/', views.user_account, name='account'),
+    path('account/edit/', views.edit_account, name='edit_account'),
+    path('account/add_dog/', views.add_dog, name='add_dog'),
+    path('account/dog/<int:dog_id>/edit/', views.edit_dog, name='edit_dog'),
 ]
