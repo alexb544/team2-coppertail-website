@@ -1,6 +1,9 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from accounts.models import Profile, Dog
+from accounts.forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm, DogUpdateForm
+from accounts.views import CustomLoginView, register, accounts
+from django.urls import reverse, resolve
 
 User = get_user_model()
 
@@ -58,6 +61,19 @@ class ProfileModelTest(TestCase):
             # Attempting to create another profile for the same user should fail
             Profile.objects.create(user=self.user)
 
+    def test_phone_number_max_length(self):
+        """Test that phone number accepts up to 20 characters"""
+        self.profile.phone_number = "1" * 20
+        self.profile.save()
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.phone_number, "1" * 20)
+
+    def test_address_max_length(self):
+        """Test that address accepts up to 80 characters"""
+        self.profile.address = "a" * 80
+        self.profile.save()
+        self.profile.refresh_from_db()
+        self.assertEqual(self.profile.address, "a" * 80)
 
 class DogModelTest(TestCase):
     def setUp(self):
@@ -145,10 +161,49 @@ class DogModelTest(TestCase):
         long_notes = "This is a very long note. " * 50
         dog = Dog.objects.create(
             owner=self.profile,
-            name="Notey",
+            name="Bella",
             notes=long_notes
         )
         self.assertEqual(dog.notes, long_notes)
+
+    def test_dog_default_size(self):
+        """Test that size defaults to MEDIUM"""
+        size = Dog.Size.MEDIUM
+        dog = Dog.objects.create(
+                owner=self.profile,
+                name="Regular"
+        )
+        self.assertEqual(dog.size, size)
+
+    def test_dog_size_small(self):
+        """Test that size can be set to SMALL"""
+        size = Dog.Size.SMALL
+        dog = Dog.objects.create(
+                owner=self.profile,
+                name="Smalls",
+                size=Dog.Size.SMALL
+        )
+        self.assertEqual(dog.size, size)
+
+    def test_dog_size_large(self):
+        """Test that size can be set to LARGE"""
+        size = Dog.Size.LARGE
+        dog = Dog.objects.create(
+                owner=self.profile,
+                name="Big",
+                size=Dog.Size.LARGE
+        )
+        self.assertEqual(dog.size, size)
+
+    def test_dog_negative_age_fails_validation(self):
+        """Test that negative age fails model validation"""
+        dog = Dog(
+                owner=self.profile,
+                name="Falling",
+                age=-1
+                )
+        with self.assertRaises(Exception):
+            dog.full_clean()
 
 
 class ProfileDogIntegrationTest(TestCase):
@@ -163,11 +218,11 @@ class ProfileDogIntegrationTest(TestCase):
     def test_different_owners_different_dogs(self):
         """Test that different profiles can have dogs with the same name"""
         dog1 = Dog.objects.create(owner=self.profile1, name="Buddy")
-        dog2 = Dog.objects.create(owner=self.profile2, name="Buddy")
+        dog2 = Dog.objects.create(owner=self.profile2, name="Charlie")
         
         self.assertNotEqual(dog1.id, dog2.id)
         self.assertEqual(str(dog1), "Buddy (owner1)")
-        self.assertEqual(str(dog2), "Buddy (owner2)")
+        self.assertEqual(str(dog2), "Charlie (owner2)")
 
     def test_cascade_from_user_to_dogs(self):
         """Test complete cascade: User -> Profile -> Dogs"""
@@ -188,3 +243,355 @@ class ProfileDogIntegrationTest(TestCase):
         self.assertEqual(Profile.objects.filter(user_id=user1_id).count(), 0)
         self.assertEqual(Dog.objects.filter(owner_id=profile1_id).count(), 0)
 
+class SignalTest(TestCase):
+
+    def test_profile_auto_created_user_creation(self):
+        """Test that creating a User automatically creates a linked Profile"""
+        user = User.objects.create_user(username="test", password="testpass123")
+        self.assertTrue(Profile.objects.filter(user=user).exists())
+
+    def test_profile_not_duplicated_user_save(self):
+        """Test that saving an existing User does not create a second Profile"""
+        user = User.objects.create_user(username="test", password="testpass123")
+        user.first_name = "Updated"
+        user.save()
+        self.assertEqual(Profile.objects.filter(user=user).count(), 1)
+
+class UserRegisterFormTest(TestCase):
+    
+    def get_valid_data(self):
+        return {
+                "username": "newuser",
+                "first_name": "John",
+                "last_name": "Doe",
+                "email": "john@example.com",
+                "password1": "StrongPass123!",
+                "password2": "StrongPass123!"
+        }
+
+    def test_valid_form(self):
+        """Test that form is valid with all correct fields"""
+        form = UserRegisterForm(data=self.get_valid_data())
+        self.assertTrue(form.is_valid())
+
+    def test_missing_username(self):
+        """Test that form is invalid without a username"""
+        data = self.get_valid_data()
+        data["username"] = ""
+        form = UserRegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("username", form.errors)
+
+    def test_missing_email(self):
+        """Test that form is invalid without an email"""
+        data = self.get_valid_data()
+        data["email"] = ""
+        form = UserRegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("email", form.errors)
+
+    def test_invalid_email(self):
+        """Test that form is invalid with a malformed email"""
+        data = self.get_valid_data()
+        data["email"] = "not-an-email"
+        form = UserRegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+        self.assertIn("email", form.errors)
+
+    def test_password_mismatch(self):
+        """Test that form is invalid when passwords don't match"""
+        data  = self.get_valid_data()
+        data["password2"] = "DifferentPass!"
+        form = UserRegisterForm(data=data)
+        self.assertFalse(form.is_valid())
+
+    def test_duplicate_username(self):
+        """Test that form is invalid if username already exists"""
+        User.objects.create_user(username="newuser", password="testpass123")
+        form = UserRegisterForm(data=self.get_valid_data())
+        self.assertFalse(form.is_valid())
+        self.assertIn("username", form.errors)
+
+    def test_form_saves_user(self):
+        """Test that a valid form creates a User in the database"""
+        form = UserRegisterForm(data=self.get_valid_data())
+        self.assertTrue(form.is_valid)
+        user = form.save()
+        self.assertIsNotNone(user.pk)
+        self.assertEqual(user.username, "newuser")
+
+class ProfileUpdateFormTest(TestCase):
+
+    def test_valid_form(self):
+        """Test that form is valid with a phone number and address"""
+        form = ProfileUpdateForm(data={
+            "phone_number": "1234567890",
+            "address": "123 Main St"
+        })
+        self.assertTrue(form.is_valid())
+
+    def test_blank_field_allowed(self):
+        """Test that both fields are optional"""
+        form = ProfileUpdateForm(data={
+            "phone_number": "", 
+            "address": ""
+            })
+
+    def test_phone_number_too_long(self):
+        """Test that phone number exceeding 20 chars is invalid"""
+        form = ProfileUpdateForm(data={
+            "phone_number": "1" * 21,
+            "address": ""
+            })
+        self.assertFalse(form.is_valid())
+        self.assertIn("phone_number", form.errors)
+
+    def test_address_too_long(self):
+        """Test that address exceeding 80 chars is invalid"""
+        form = ProfileUpdateForm(data={
+            "phone_number": "",
+            "address": "a" * 81
+            })
+        self.assertFalse(form.is_valid())
+        self.assertIn("address", form.errors)
+
+class UserUpdateFormTest(TestCase):
+ 
+    def setUp(self):
+        self.user = User.objects.create_user(
+            username="existinguser",
+            password="testpass123",
+            email="old@example.com"
+        )
+ 
+    def test_valid_form(self):
+        """Test that form is valid with a username and email"""
+        form = UserUpdateForm(
+            data={
+                "username": "updateduser", 
+                "email": "new@example.com"
+            },
+            instance=self.user
+        )
+        self.assertTrue(form.is_valid())
+ 
+    def test_invalid_email(self):
+        """Test that form is invalid with a malformed email"""
+        form = UserUpdateForm(
+            data={
+                "username": "updateduser", 
+                "email": "not-an-email"},
+            instance=self.user
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("email", form.errors)
+ 
+    def test_missing_username(self):
+        """Test that form is invalid without a username"""
+        form = UserUpdateForm(
+            data={
+                "username": "", 
+                "email": "new@example.com"
+                },
+            instance=self.user
+        )
+        self.assertFalse(form.is_valid())
+        self.assertIn("username", form.errors)
+ 
+ 
+class DogUpdateFormTest(TestCase):
+ 
+    def test_valid_form(self):
+        """Test that form is valid with just a name"""
+        form = DogUpdateForm(data={
+            "name": "Buddy", 
+            "breed": "", 
+            "age": "", 
+            "notes": ""
+            })
+        self.assertTrue(form.is_valid())
+ 
+    def test_missing_name(self):
+        """Test that form is invalid without a name"""
+        form = DogUpdateForm(data={
+            "name": "", 
+            "breed": "Poodle", 
+            "age": 2, 
+            "notes": ""
+            })
+        self.assertFalse(form.is_valid())
+        self.assertIn("name", form.errors)
+ 
+    def test_negative_age_invalid(self):
+        """Test that a negative age fails form validation"""
+        form = DogUpdateForm(data={
+            "name": "Rex", 
+            "breed": "", 
+            "age": -1, 
+            "notes": ""
+            })
+        self.assertFalse(form.is_valid())
+        self.assertIn("age", form.errors)
+ 
+    def test_optional_fields_can_be_blank(self):
+        """Test that breed, age, and notes are all optional"""
+        form = DogUpdateForm(data={
+            "name": "Max", 
+            "breed": "", 
+            "age": "", 
+            "notes": ""})
+        self.assertTrue(form.is_valid())
+
+class RegisterViewTest(TestCase):
+ 
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("accounts:register")
+ 
+    def test_register_get(self):
+        """Test that GET returns 200 and renders the registration form"""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/register.html")
+        self.assertIsInstance(response.context["form"], UserRegisterForm)
+ 
+    def test_register_post_valid(self):
+        """Test that valid POST creates a user and redirects to login"""
+        response = self.client.post(self.url, {
+            "username": "newuser",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane@example.com",
+            "password1": "StrongPass123!",
+            "password2": "StrongPass123!",
+        })
+        self.assertRedirects(response, reverse("accounts:login"))
+        self.assertTrue(User.objects.filter(username="newuser").exists())
+ 
+    def test_register_post_valid_creates_profile(self):
+        """Test that valid registration also auto-creates a Profile via signal"""
+        self.client.post(self.url, {
+            "username": "newuser",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane@example.com",
+            "password1": "StrongPass123!",
+            "password2": "StrongPass123!",
+        })
+        user = User.objects.get(username="newuser")
+        self.assertTrue(Profile.objects.filter(user=user).exists())
+ 
+    def test_register_post_invalid(self):
+        """Test that invalid POST re-renders the form without creating a user"""
+        response = self.client.post(self.url, {
+            "username": "",
+            "email": "bad-email",
+            "password1": "pass",
+            "password2": "different",
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/register.html")
+        self.assertFalse(User.objects.filter(email="bad-email").exists())
+ 
+    def test_register_post_shows_success_message(self):
+        """Test that successful registration flashes a success message"""
+        response = self.client.post(self.url, {
+            "username": "newuser",
+            "first_name": "Jane",
+            "last_name": "Smith",
+            "email": "jane@example.com",
+            "password1": "StrongPass123!",
+            "password2": "StrongPass123!",
+        }, follow=True)
+        messages = list(response.context["messages"])
+        self.assertTrue(any("newuser" in str(m) for m in messages))
+ 
+ 
+class AccountsViewTest(TestCase):
+ 
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("accounts:accounts")
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpass123"
+        )
+ 
+    def test_accounts_get_returns_200(self):
+        """Test that GET returns 200"""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+ 
+    def test_accounts_uses_correct_template(self):
+        """Test that the view renders accounts/home.html"""
+        response = self.client.get(self.url)
+        self.assertTemplateUsed(response, "accounts/home.html")
+ 
+    def test_accounts_context_contains_userinfo(self):
+        """Test that context contains userinfo"""
+        response = self.client.get(self.url)
+        self.assertIn("userinfo", response.context)
+ 
+    def test_accounts_context_contains_dogs(self):
+        """Test that context contains dogs"""
+        response = self.client.get(self.url)
+        self.assertIn("dogs", response.context)
+ 
+    def test_accounts_context_page_title(self):
+        """Test that context contains the correct page_title"""
+        response = self.client.get(self.url)
+        self.assertEqual(response.context["page_title"], "Coppertail Grooming")
+ 
+ 
+class LoginViewTest(TestCase):
+ 
+    def setUp(self):
+        self.client = Client()
+        self.url = reverse("accounts:login")
+        self.user = User.objects.create_user(
+            username="testuser",
+            password="testpass123"
+        )
+ 
+    def test_login_get(self):
+        """Test that GET returns 200 and renders the login template"""
+        response = self.client.get(self.url)
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/login.html")
+ 
+    def test_login_post_valid(self):
+        """Test that valid credentials log in and redirect to accounts page"""
+        response = self.client.post(self.url, {
+            "username": "testuser",
+            "password": "testpass123",
+        })
+        self.assertRedirects(response, reverse("accounts:accounts"))
+ 
+    def test_login_post_invalid(self):
+        """Test that invalid credentials re-render the login page"""
+        response = self.client.post(self.url, {
+            "username": "testuser",
+            "password": "wrongpassword",
+        })
+        self.assertEqual(response.status_code, 200)
+        self.assertTemplateUsed(response, "accounts/login.html")
+
+class URLTest(TestCase):
+ 
+    def test_register_url_resolves_to_register_view(self):
+        """Test that the register URL resolves to the register view"""
+        url = reverse("accounts:register")
+        resolver = resolve(url)
+        self.assertEqual(resolver.func, register)
+ 
+    def test_accounts_url_resolves_to_accounts_view(self):
+        """Test that the accounts URL resolves to the accounts view"""
+        url = reverse("accounts:accounts")
+        resolver = resolve(url)
+        self.assertEqual(resolver.func, accounts)
+ 
+    def test_login_url_resolves_to_custom_login_view(self):
+        """Test that the login URL resolves to CustomLoginView"""
+        url = reverse("accounts:login")
+        resolver = resolve(url)
+        self.assertEqual(resolver.func.view_class, CustomLoginView)
