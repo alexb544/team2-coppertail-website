@@ -61,7 +61,7 @@
 
 			<li> <a class="header-link" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
 
-			<li> <a class="header-link" id="appointment" href="{% url 'booking_create' %}">Book Now</a> </li>
+			<li> <a class="header-link" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
 			<li> <a class="header-link" id="contact">Contact Us</a> </li>
 
 			{% if user.is_authenticated %}

@@ -18,6 +18,7 @@ from booking.models import Booking
 
 class CustomLoginView(LoginView):
     template_name = "accounts/login.html"
+    authentication_form = LoginForm
 
     def form_valid(self, form):
         remember_me = form.cleaned_data.get('remember_me')
