@@ -33,6 +33,7 @@ venv.bak/
 local_settings.py
 /media
 /static
+/profile_images
 
 # IDE-specific files (optional, can also be set globally)
 .vscode/
