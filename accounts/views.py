@@ -9,7 +9,6 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.encoding import force_bytes
 from django.contrib.auth.models import User
 
-
 from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, DogForm, LoginForm
 from .models import Profile, Dog
 from services.models import Service
@@ -22,15 +21,19 @@ class CustomLoginView(LoginView):
 
     def form_valid(self, form):
         remember_me = form.cleaned_data.get('remember_me')
+        
         if not remember_me:
             self.request.session.set_expiry(0)
             self.request.session.modified = True
+
         return super(CustomLoginView, self).form_valid(form)
+
 
 def register(request):
     """View for user registration"""
     if request.method == 'POST':
         form = UserRegisterForm(request.POST)
+        
         if form.is_valid():
             form.save()
             username = form.cleaned_data.get('username')
@@ -38,7 +41,9 @@ def register(request):
             return redirect('accounts:login')
     else:
         form = UserRegisterForm()
+    
     return render(request, 'accounts/register.html', {'form': form})
+
 
 def accounts(request):
     """Display all account information (i.e. name, email, dog information)"""
@@ -53,6 +58,7 @@ def accounts(request):
     }
     return render(request, 'accounts/home.html', context)
 
+
 @login_required
 def user_account(request):
     profile = Profile.objects.get(user=request.user)
@@ -65,12 +71,15 @@ def user_account(request):
         'bookings': bookings,
     })
 
+
 @login_required
 def edit_account(request):
     profile = Profile.objects.get(user=request.user)
+
     if request.method == "POST":
         user_form = UserUpdateForm(request.POST, instance=request.user)
         profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile) 
+    
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()
@@ -78,14 +87,17 @@ def edit_account(request):
     else: 
         user_form = UserUpdateForm(instance=request.user)
         profile_form = ProfileUpdateForm(instance=profile)
+    
     return render(request, "accounts/edit_account.html", {
         "user_form": user_form,
         "profile_form": profile_form,
     })
 
+
 @login_required
 def add_dog(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
+    
     if request.method == "POST":
         form = DogForm(request.POST)
         if form.is_valid():
@@ -95,19 +107,24 @@ def add_dog(request):
             return redirect("accounts:account")
     else:
         form = DogForm()
+    
     return render(request, "accounts/add_dog.html", {"form": form})
+
 
 @login_required
 def edit_dog(request, dog_id):
     profile = Profile.objects.get(user=request.user)
     dog = get_object_or_404(Dog, id=dog_id, owner=profile)
+    
     if request.method == "POST":
         form = DogForm(request.POST, instance=dog)
+    
         if form.is_valid():
             form.save()
             return redirect("accounts:account")
     else:
         form = DogForm(instance=dog)
+    
     return render(request, "accounts/edit_dog.html", {
         "form": form,
         "dog": dog,
@@ -138,6 +155,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
         except User.DoesNotExist:
             messages.error(self.request, "No user found with that email address.")
             return redirect('accounts:password_reset')
+
 
 def services_view(request):
     services = Service.objects.all()
