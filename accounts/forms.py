@@ -1,5 +1,5 @@
 from django import forms
-from django.contrib.auth.forms import UserCreationForm
+from django.contrib.auth.forms import UserCreationForm, AuthenticationForm
 from django.forms import inlineformset_factory
 from django.contrib.auth.models import User
 from .models import Profile, Dog
@@ -49,23 +49,23 @@ class DogForm(forms.ModelForm):
             "size": forms.TextInput(attrs={"class": "form-control"}),
             "notes": forms.Textarea(attrs={"rows": 2, "class": "form-control"}),
         }
-from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+
+
 DogFormSet = inlineformset_factory(Profile, Dog, form=DogForm, extra=0, can_delete=True)
+
 class LoginForm(AuthenticationForm):
     username = forms.CharField(
-        widget=forms.TextInput(attrs={
+        widget = forms.TextInput(attrs={
             'placeholder': 'Username', # Your Placeholder
             'class': 'form-control',
         })
     )
     password = forms.CharField(
-        widget=forms.PasswordInput(attrs={
+        widget = forms.PasswordInput(attrs={
             'placeholder': 'Password', # Your Placeholder
             'class': 'form-control',
             'id': 'password',
         })
     )
-
 
     remember_me = forms.BooleanField(required=False)
