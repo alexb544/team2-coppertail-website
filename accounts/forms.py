@@ -30,9 +30,10 @@ class UserUpdateForm(forms.ModelForm):
 class ProfileUpdateForm(forms.ModelForm):
     class Meta:
         model = Profile
-        fields = ["phone_number", "address"]
+        fields = ["avatar","phone_number", "address"]
         widgets = {
             "phone_number": forms.TextInput(attrs={"class": "form-control"}), 
+            "avatar": forms.FileInput(attrs={"class": "form-control"}),
             "address": forms.TextInput(attrs={"class": "form-control"}),
         }
 

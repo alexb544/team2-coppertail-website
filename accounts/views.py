@@ -70,7 +70,7 @@ def edit_account(request):
     profile = Profile.objects.get(user=request.user)
     if request.method == "POST":
         user_form = UserUpdateForm(request.POST, instance=request.user)
-        profile_form = ProfileUpdateForm(request.POST, instance=profile)
+        profile_form = ProfileUpdateForm(request.POST, request.FILES, instance=profile) 
         if user_form.is_valid() and profile_form.is_valid():
             user_form.save()
             profile_form.save()

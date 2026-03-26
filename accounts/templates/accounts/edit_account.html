@@ -21,7 +21,7 @@
         margin-bottom: 15px;
         font-size: 20px;
         color: #000000;
-        font: bold;
+        font-weight: bold;
 
     }
 
@@ -34,6 +34,15 @@
         font-weight: bold;
         margin-bottom: 8px;
     }
+
+    .account-img-preview {
+    width: 100px;
+    height: 100px;
+    object-fit: cover;
+    border-radius: 50%;
+    margin-bottom: 10px;
+    border: 2px solid #333;
+}
 
     .form-control {
         width: 100%;
@@ -73,7 +82,7 @@
 <div class="form-container">
     <h1>Edit Profile</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-group">
@@ -98,6 +107,14 @@
             <label for="{{ user_form.email.id_for_label }}">Email</label>
             {{ user_form.email }}
             {{ user_form.email.errors }}
+        </div>
+
+        <div class="form-group">
+            <label>Current Profile Picture</label>
+            <img src="{{ request.user.profile.avatar.url }}" class="account-img-preview">
+            <label for="{{ profile_form.avatar.id_for_label }}">Upload New Picture</label>
+            {{ profile_form.avatar }}
+            {{ profile_form.avatar.errors }}
         </div>
 
         <div class="form-group">

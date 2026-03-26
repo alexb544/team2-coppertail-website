@@ -36,3 +36,10 @@ path('logout/', auth_views.LogoutView.as_view(template_name='accounts/logout.htm
     path('account/add_dog/', views.add_dog, name='add_dog'),
     path('account/dog/<int:dog_id>/edit/', views.edit_dog, name='edit_dog'),
 ]
+
+from django.conf import settings
+from django.conf.urls.static import static
+
+# This tells Django where to look for your uploaded photos
+if settings.DEBUG:
+    urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
