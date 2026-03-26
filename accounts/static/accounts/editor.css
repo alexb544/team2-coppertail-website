@@ -120,3 +120,14 @@ header {
 .login-content .button1 {
     margin: 0 auto;
 }
+
+/* Used in: services.html */
+.services-info {
+    display: flex;
+    justify-content: space-between;
+}
+.extra-link {
+    display: flex;
+    justify-content: right;
+    color: #ffffff;
+}
