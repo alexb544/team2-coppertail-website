@@ -4,14 +4,17 @@
 
 {% block content %}
 {% if services %}
-    {% for service in services %}
 <h2 class = "header1">What We Offer</h2>
-<h3>{{ service_name }}</h3>
-<div class="flex">
-    <div>{{ description }}</div>
-    <div>{{ base_price }}</div>
+    {% for service in services %}
+<h3>{{ service.service_name }}</h3>
+<div class="info">
+    <div class="services-info">
+        <div>{{ service.description }}</div>
+        <div>{{ service.base_price }}</div>
+    </div>
 </div>
     {% endfor %}
+    <a class="extra-link" href="{% url 'booking:booking_create' %}">Book now!</a>
 {% else %}
 <h2 class="header1">Ruh roh!</h2>
 <div class="info">
