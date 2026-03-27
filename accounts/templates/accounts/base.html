@@ -9,44 +9,45 @@
 	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
 	<style>
 		* {
-			margin: 0;
-			padding: 0;
+			margin: 5;
+			padding: 5;
 			box-sizing: border-box;
 		}
-		.container {
-            width: min(900px, calc(100% - 40px));
-            margin: 20px auto; 
-        }
 	</style>
 </head>
-<body>
+<body class="bg-red-100">
 	<header>
-		<div class="flex justify-between mx-5">
-			<img class="h-20" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
-			<ul class="list-inside overflow-hidden flex justify-between text-black hover:#C56A39">
-				<li> <a class="header-link" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
-				<li> <a class="header-link" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
-				<li> <a class="header-link" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
-				<li> <a class="header-link" id="contact">Contact Us</a> </li>
-				{% if user.is_authenticated %}
-					<li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
-					<li> <a class="header-link" id="account-page" href="{% url 'accounts:account' %}">My Account</a> </li>
-					<li>
-						<form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
-							{% csrf_token %}
-							<button type="submit" class="nav-link-btn">Log Out</button>
-						</form>
-					</li>
-				{% else %}
-					<li><a href="{% url 'accounts:login' %}">Log In</a></li>
-					<li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
-				{% endif %}
-			</ul>
-		</div>
-		<hr>
+		<nav class="flex justify-between items-center flex-wrap bg-green-100 py-2 sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
+			<div class="flex items-center flex-shrink-0 text-black m-2 px-5">
+				<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo" />
+				<ul class="flex justify-around text-black font-bold sm:flex-wrap sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
+					<li> <a class="sm:px-1 hover:text-orange-600" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
+					<li class="sm:px-1 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
+					<li class="sm:px-1 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
+					<li class="sm:px-1 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="contact">Contact Us</a> </li>
+				</ul>
+			</div>
+			<div class="group">
+				<button class="flex items-center px-3 py-2 text-black hover:text-gray-600 hover:border-white">
+					<img class="h-5 md:h-7 lg:h-10 xl:h-12" src="{% static 'accounts/default_profile_picture.jpg' %}" alt="default profile" />
+				</button>
+				<div class="absolute w-full block flex-grow sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14 opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+					<div class="flex-wrap">
+						{% if user.is_authenticated %}
+						<a class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 mr-4" id="account-page" href="{% url 'accounts:account' %} #responsive-header">My Account</a>
+						<form class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 mr-4" action="{% url 'accounts:logout' %} #responsive-header" method="post">{% csrf_token %}<button type="submit" class="nav-link-btn">Log Out</button></form>
+						{% else %}
+						<a class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 px-2" href="{% url 'accounts:login' %}">Log In</a>
+						<a class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 px-2" href="{% url 'accounts:register' %}">Sign Up</a>
+						{% endif %}
+					</div>
+				</div>
+			</div>
+		</nav>
+		<hr class="color-green-800">
 	</header>
 
-	<div class = "container">
+	<div class = "w-5/6 m-15">
 		{% if messages %}
             {% for message in messages %}
                 <div style="
