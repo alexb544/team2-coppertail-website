@@ -6,4 +6,5 @@ urlpatterns = [
     path('booking/', include("booking.urls")),
     path('', include('accounts.urls')),  # this line connects to the login page(hopefully)
     path('services/', include('services.urls')),
+    # add about us page here
 ]
