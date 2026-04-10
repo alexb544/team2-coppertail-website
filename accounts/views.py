@@ -160,3 +160,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 def services_view(request):
     services = Service.objects.all()
     return render(request, 'services/services.html', {'services': services})
+
+def about(request):
+    return render(request, 'accounts/about.html')
