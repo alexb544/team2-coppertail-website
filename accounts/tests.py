@@ -1,7 +1,7 @@
 from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from accounts.models import Profile, Dog
-from accounts.forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm, DogUpdateForm
+from accounts.forms import UserRegisterForm, ProfileUpdateForm, UserUpdateForm, DogForm
 from accounts.views import CustomLoginView, register, accounts
 from django.urls import reverse, resolve
 
@@ -397,48 +397,47 @@ class UserUpdateFormTest(TestCase):
         )
         self.assertFalse(form.is_valid())
         self.assertIn("username", form.errors)
- 
- 
-class DogUpdateFormTest(TestCase):
- 
+
+class DogFormTest(TestCase):
+
     def test_valid_form(self):
         """Test that form is valid with just a name"""
-        form = DogUpdateForm(data={
-            "name": "Buddy", 
-            "breed": "", 
-            "age": "", 
+        form = DogForm(data={
+            "name": "Buddy",
+            "breed": "",
+            "age": "",
             "notes": ""
             })
         self.assertTrue(form.is_valid())
- 
+
     def test_missing_name(self):
         """Test that form is invalid without a name"""
-        form = DogUpdateForm(data={
-            "name": "", 
-            "breed": "Poodle", 
-            "age": 2, 
+        form = DogForm(data={
+            "name": "",
+            "breed": "Poodle",
+            "age": 2,
             "notes": ""
             })
         self.assertFalse(form.is_valid())
         self.assertIn("name", form.errors)
- 
+
     def test_negative_age_invalid(self):
         """Test that a negative age fails form validation"""
-        form = DogUpdateForm(data={
-            "name": "Rex", 
-            "breed": "", 
-            "age": -1, 
+        form = DogForm(data={
+            "name": "Rex",
+            "breed": "",
+            "age": -1,
             "notes": ""
             })
         self.assertFalse(form.is_valid())
         self.assertIn("age", form.errors)
- 
+
     def test_optional_fields_can_be_blank(self):
         """Test that breed, age, and notes are all optional"""
-        form = DogUpdateForm(data={
-            "name": "Max", 
-            "breed": "", 
-            "age": "", 
+        form = DogForm(data={
+            "name": "Max",
+            "breed": "",
+            "age": "",
             "notes": ""})
         self.assertTrue(form.is_valid())
 

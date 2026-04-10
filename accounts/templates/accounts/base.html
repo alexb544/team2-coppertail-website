@@ -65,6 +65,9 @@
 			<li> <a class="header-link" id="contact">Contact Us</a> </li>
 
 			{% if user.is_authenticated %}
+			{% if user.is_staff or user.is_superuser %}
+        <li><a class="header-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
+    {% endif %}
     <li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
     <li> <a class="header-link" id="account-page" href="{% url 'accounts:account' %}">My Account</a> </li>
     <li>

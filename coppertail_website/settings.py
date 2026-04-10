@@ -17,6 +17,7 @@ INSTALLED_APPS = [
     'accounts.apps.AccountsConfig',
     'booking',
     'services.apps.ServicesConfig',
+    'dashboard',
 ]
 
 MIDDLEWARE = [
