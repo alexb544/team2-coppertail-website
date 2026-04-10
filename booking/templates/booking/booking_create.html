@@ -1,134 +1,159 @@
-{% extends "accounts/base.html" %}
+{% extends 'booking/../../../accounts/templates/accounts/base.html' %}
 
 {% block title %}Create Booking{% endblock %}
 
 {% block content %}
 <div class="booking-shell">
-    <div class="booking-steps">
-        <div class="step active">
-            <span class="step-number">1</span>
-            <span class="step-label">Choose Details</span>
-        </div>
-        <div class="step-line active"></div>
-        <div class="step">
-            <span class="step-number">2</span>
-            <span class="step-label">Confirm</span>
-        </div>
-        <div class="step-line"></div>
-        <div class="step">
-            <span class="step-number">3</span>
-            <span class="step-label">Success</span>
-        </div>
-    </div>
-
     <div class="booking-card">
         <div class="booking-header">
             <h2>Book an Appointment</h2>
-            <p>Select a time, choose your dog, and pick the services you’d like.</p>
+            <p>Choose your dog and services on the left, then click an available time on the calendar.</p>
         </div>
 
-        <form method="post" class="booking-form">
+        <form method="post">
             {% csrf_token %}
             {{ form.non_field_errors }}
 
-            <div class="form-section">
-                <label class="section-label" for="{{ form.slot.id_for_label }}">Choose a Time</label>
-                <p class="section-help">Select one of the currently available appointment slots.</p>
-                {{ form.slot }}
-                {% if form.slot.errors %}
-                    <div class="form-errors">{{ form.slot.errors }}</div>
-                {% endif %}
-            </div>
+            <input type="hidden" name="slot" id="id_slot" value="{{ form.slot.value|default:'' }}">
 
-            <div class="form-section">
-                <label class="section-label" for="{{ form.dog.id_for_label }}">Choose a Dog</label>
-                <p class="section-help">Only dogs connected to your account are shown here.</p>
-                {{ form.dog }}
-                {% if form.dog.errors %}
-                    <div class="form-errors">{{ form.dog.errors }}</div>
-                {% endif %}
-            </div>
+            <div class="booking-layout">
+                <div class="booking-sidebar">
+                    <div class="form-section">
+                        <label class="section-label" for="{{ form.dog.id_for_label }}">Choose a Dog</label>
+                        <p class="section-help">Only dogs connected to your account are shown here.</p>
+                        {{ form.dog }}
+                        {% if form.dog.errors %}
+                            <div class="form-errors">{{ form.dog.errors }}</div>
+                        {% endif %}
+                    </div>
 
-            <div class="form-section">
-                <div class="services-header">
-                    <label class="section-label">Choose Services</label>
-                    <p class="section-help">You can select one or more grooming services.</p>
+                    <div class="form-section">
+                        <label class="section-label">Choose Services</label>
+                        <p class="section-help">Select one or more services.</p>
+
+                        <div class="services-panel">
+                            {{ form.services }}
+                        </div>
+
+                        {% if form.services.errors %}
+                            <div class="form-errors">{{ form.services.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-section">
+                        <label class="section-label">Selected Appointment</label>
+                        <p class="section-help">Click an appointment on the calendar to choose it.</p>
+
+                        <div id="selected-slot-box" class="selected-slot-box empty">
+                            No appointment selected yet.
+                        </div>
+
+                        {% if form.slot.errors %}
+                            <div class="form-errors">{{ form.slot.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="button1 booking-button" type="submit">Review Booking</button>
+                    </div>
                 </div>
 
-                <div class="services-panel">
-                    {{ form.services }}
+                <div class="booking-calendar-panel">
+                    <div class="form-section calendar-section">
+                        <label class="section-label">Choose a Time</label>
+                        <p class="section-help">Available appointments appear directly on the calendar.</p>
+
+                        <div id="calendar"></div>
+                    </div>
                 </div>
-
-                {% if form.services.errors %}
-                    <div class="form-errors">{{ form.services.errors }}</div>
-                {% endif %}
-            </div>
-
-            <div class="form-actions">
-                <button class="button1 booking-button" type="submit">Review Booking</button>
             </div>
         </form>
     </div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const slotInput = document.getElementById('id_slot');
+    const selectedBox = document.getElementById('selected-slot-box');
+
+    let selectedEventId = slotInput.value || null;
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        height: 'auto',
+        events: "{% url 'booking:booking_slots_json' %}",
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: ''
+        },
+        displayEventTime: false,
+        eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: 'short'
+        },
+        eventClick: function(info) {
+            const event = info.event;
+
+            selectedEventId = event.id;
+            slotInput.value = event.id;
+
+            calendar.getEvents().forEach(function(ev) {
+                ev.setProp('backgroundColor', '');
+                ev.setProp('borderColor', '');
+            });
+
+            event.setProp('backgroundColor', '#244636');
+            event.setProp('borderColor', '#244636');
+
+            const startText = event.start.toLocaleString([], {
+                weekday: 'long',
+                month: 'long',
+                day: 'numeric',
+                hour: 'numeric',
+                minute: '2-digit'
+            });
+
+            selectedBox.innerHTML = startText;
+            selectedBox.classList.remove('empty');
+        },
+        eventDidMount: function(info) {
+            if (selectedEventId && info.event.id === selectedEventId) {
+                info.event.setProp('backgroundColor', '#244636');
+                info.event.setProp('borderColor', '#244636');
+
+                const startText = info.event.start.toLocaleString([], {
+                    weekday: 'long',
+                    month: 'long',
+                    day: 'numeric',
+                    hour: 'numeric',
+                    minute: '2-digit'
+                });
+
+                selectedBox.innerHTML = startText;
+                selectedBox.classList.remove('empty');
+            }
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
 <style>
     .booking-shell {
-        max-width: 860px;
-        margin: 30px auto 50px;
-        padding: 0 20px;
-    }
-
-    .booking-steps {
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        margin-bottom: 28px;
-        flex-wrap: wrap;
-        gap: 10px;
-    }
-
-    .step {
-        display: flex;
-        align-items: center;
-        gap: 10px;
-        color: #6b7280;
-        font-weight: 600;
-    }
-
-    .step.active {
-        color: #1f2937;
-    }
-
-    .step-number {
-        width: 34px;
-        height: 34px;
-        border-radius: 999px;
-        display: inline-flex;
-        align-items: center;
-        justify-content: center;
-        background: #dbe7df;
-        color: #244636;
-        font-weight: 700;
-        border: 2px solid #a9c3b5;
-    }
-
-    .step.active .step-number {
-        background: #244636;
-        color: #ffffff;
-        border-color: #244636;
-    }
-
-    .step-line {
-        width: 60px;
-        height: 2px;
-        background: #cfd8d3;
-    }
-
-    .step-line.active {
-        background: #244636;
+        width: 100%;
+        margin: 0;
+        padding: 0;
     }
 
     .booking-card {
+        width: 100%;
         background: #fcfcfa;
         border: 1px solid #d9e3dd;
         border-radius: 18px;
@@ -153,16 +178,34 @@
         font-size: 1rem;
     }
 
-    .booking-form {
+    .booking-layout {
         display: grid;
-        gap: 22px;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+        width: 100%;
+    }
+
+    .booking-sidebar {
+        display: grid;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .booking-calendar-panel {
+        min-width: 0;
+        width: 100%;
+    }
+
+    .calendar-section {
+        height: 100%;
     }
 
     .form-section {
         background: #f7faf8;
         border: 1px solid #dde8e1;
         border-radius: 14px;
-        padding: 18px 18px 16px;
+        padding: 18px;
     }
 
     .section-label {
@@ -177,6 +220,56 @@
         margin: 0 0 12px;
         color: #66736d;
         font-size: 0.95rem;
+    }
+
+    #calendar {
+        width: 100%;
+        background: #ffffff;
+        border: 1px solid #cfe0d6;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .fc {
+        width: 100%;
+    }
+
+    .fc .fc-daygrid-day-frame {
+        min-height: 110px;
+    }
+
+    .fc .fc-daygrid-event {
+        white-space: normal;
+        font-size: 0.85rem;
+        padding: 3px 6px;
+    }
+
+    .fc .fc-event-title {
+        white-space: normal;
+        overflow: visible;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.2rem;
+        color: #1f2937;
+    }
+
+    .fc .fc-button {
+        background: #244636;
+        border-color: #244636;
+    }
+
+    .fc .fc-button:hover,
+    .fc .fc-button:focus {
+        background: #1b3529;
+        border-color: #1b3529;
+    }
+
+    .fc .fc-event {
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 2px 4px;
+        font-size: 0.9rem;
     }
 
     .form-section select {
@@ -224,6 +317,21 @@
         height: 18px;
     }
 
+    .selected-slot-box {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #e8f2ec;
+        border: 1px solid #b9d1c0;
+        color: #1f2937;
+        font-weight: 600;
+    }
+
+    .selected-slot-box.empty {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+        color: #6b7280;
+    }
+
     .form-errors {
         margin-top: 10px;
         padding: 10px 12px;
@@ -237,7 +345,6 @@
     .form-actions {
         display: flex;
         justify-content: center;
-        margin-top: 4px;
     }
 
     .booking-button {
@@ -246,6 +353,12 @@
         border-radius: 999px;
         font-size: 1rem;
         font-weight: 700;
+    }
+
+    @media (max-width: 980px) {
+        .booking-layout {
+            grid-template-columns: 1fr;
+        }
     }
 
     @media (max-width: 640px) {
@@ -257,12 +370,8 @@
             font-size: 1.65rem;
         }
 
-        .step-label {
-            font-size: 0.9rem;
-        }
-
-        .step-line {
-            width: 28px;
+        .fc .fc-daygrid-day-frame {
+            min-height: 90px;
         }
     }
 </style>

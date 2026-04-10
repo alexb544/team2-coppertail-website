@@ -8,31 +8,34 @@
 	<link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
 	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
 	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-		.container {
-            width: min(900px, calc(100% - 40px));
-            margin: 20px auto;
-        }
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
 
-		.nav-link-btn {
-			background: none;
-			border: none;
-			color: #007bff;
-			text-decoration: underline;
-			cursor: pointer;
-			font-family: inherit;
-			font-size: inherit;
-			padding: 0;
-		}
-.user-welcome {
-    font-weight: bold;
-    margin-right: 10px;
-}
-	</style>
+    .container {
+        width: calc(100% - 40px);
+        max-width: 1400px;
+        margin: 20px auto;
+    }
+
+    .nav-link-btn {
+        background: none;
+        border: none;
+        color: #007bff;
+        text-decoration: underline;
+        cursor: pointer;
+        font-family: inherit;
+        font-size: inherit;
+        padding: 0;
+    }
+
+    .user-welcome {
+        font-weight: bold;
+        margin-right: 10px;
+    }
+</style>
 </head>
 <body>
 	<header>
