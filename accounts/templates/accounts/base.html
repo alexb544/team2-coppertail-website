@@ -7,48 +7,46 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
 	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
-	<style>
-		* {
-			margin: 5;
-			padding: 5;
-			box-sizing: border-box;
-		}
-	</style>
 </head>
-<body class="bg-red-100">
+<body class="bg-white">
 	<header>
-		<nav class="flex justify-between items-center flex-wrap bg-green-100 py-2 sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
+		<nav class="flex justify-between items-center flex-wrap bg-green-200 py-2 sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
 			<div class="flex items-center flex-shrink-0 text-black m-2 px-5">
-				<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo" />
+				<a href="{% url 'accounts:accounts' %}">
+					<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
+				</a>
 				<ul class="flex justify-around text-black font-bold sm:flex-wrap sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
-					<li> <a class="sm:px-1 hover:text-orange-600" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
-					<li class="sm:px-1 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
-					<li class="sm:px-1 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
-					<li class="sm:px-1 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="contact">Contact Us</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="contact">Contact Us</a> </li>
 				</ul>
 			</div>
 			<div class="group">
 				<button class="flex items-center px-3 py-2 text-black hover:text-gray-600 hover:border-white">
-					<img class="h-5 md:h-7 lg:h-10 xl:h-12" src="{% static 'accounts/default_profile_picture.jpg' %}" alt="default profile" />
+					<img class="h-7 md:h-10 lg:h-10 xl:h-12" src="{% static 'accounts/default_avatar.png' %}" alt="default profile" />
 				</button>
-				<div class="absolute w-full block flex-grow sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14 opacity-0 invisible group-hover:opacity-100 group-hover:visible">
-					<div class="flex-wrap">
-						{% if user.is_authenticated %}
-						<a class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 mr-4" id="account-page" href="{% url 'accounts:account' %} #responsive-header">My Account</a>
-						<form class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 mr-4" action="{% url 'accounts:logout' %} #responsive-header" method="post">{% csrf_token %}<button type="submit" class="nav-link-btn">Log Out</button></form>
-						{% else %}
-						<a class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 px-2" href="{% url 'accounts:login' %}">Log In</a>
-						<a class="block mt-4 lg:inline-block lg:mt-0 text-black hover:text-gray-600 px-2" href="{% url 'accounts:register' %}">Sign Up</a>
-						{% endif %}
+				{% if user.is_authenticated %}
+				<div class="absolute w-25 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+					<div class="flex flex-col">
+						<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:account' %}">My Account</a>
+						<form class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-link-btn">Log Out</button></form>
 					</div>
 				</div>
+				{% else %}
+				<div class="absolute w-20 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+					<div class="flex flex-col">
+						<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:login' %}">Log In</a>
+						<a class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" href="{% url 'accounts:register' %}">Sign Up</a>
+					</div>
+				</div>
+				{% endif %}
 			</div>
 		</nav>
 		<hr class="color-green-800">
 	</header>
 
-	<div class = "w-5/6 m-15">
-		{% if messages %}
+	{% if messages %}
+		<div class = "w-5/6 m-15">
             {% for message in messages %}
                 <div style="
 					padding: 20px; 
@@ -61,10 +59,11 @@
 					">{{ message }}
                 </div>
             {% endfor %}
-        {% endif %}
-		{% block content %}
-		{% endblock %}
-	</div>
+		</div>
+	{% endif %}
+
+	{% block content %}
+	{% endblock %}
 
 	<footer></footer>
 </body>
