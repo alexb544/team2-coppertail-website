@@ -1,6 +1,15 @@
 from pathlib import Path
 import os
-EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'groomingcoppertail@gmail.com'
+EMAIL_HOST_PASSWORD = 'qyhl ndnk wzdl klsf'
+DEFAULT_FROM_EMAIL = 'Coppertail Team <groomingcoppertail@gmail.com>'
+DOMAIN = '127.0.0.1:8000'
+
 BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-i*yl9$y*fu1l6u6)o9q=4927r3ed7p28xd%-i6vswb=nn4+=56'
 DEBUG = True

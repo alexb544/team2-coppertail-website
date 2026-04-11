@@ -29,6 +29,8 @@ Follows Agile development practices with two week sprints focused on planning, d
 - `HTML/CSS`
 - `GitHub`
 - `Tailwind`
+- 'Pillow'
+
 
 ## Project Architecture
 The application follows Django’s `Model-View-Template` (MVT) architecture.

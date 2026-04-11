@@ -135,7 +135,7 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
     template_name = 'accounts/password_reset.html'
     email_template_name = 'accounts/password_reset_email.html'
     subject_template_name = 'accounts/password_reset_subject.txt'
-    success_message = "Check your terminal! The reset link is printed there."
+    success_message = "Check your Email! The reset link is printed there."
     success_url = reverse_lazy('accounts:accounts')
 
     def form_valid(self, form):
@@ -160,3 +160,6 @@ class ResetPasswordView(SuccessMessageMixin, PasswordResetView):
 def services_view(request):
     services = Service.objects.all()
     return render(request, 'services/services.html', {'services': services})
+
+def about(request):
+    return render(request, 'accounts/about.html')
