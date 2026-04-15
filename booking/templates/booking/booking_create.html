@@ -6,8 +6,7 @@
 <div class="booking-shell">
     <div class="booking-card">
         <div class="booking-header">
-            <h2>Book an Appointment</h2>
-            <p>Choose your dog and services on the left, then click an available time on the calendar.</p>
+            <h2><b>Book an Appointment</b></h2>
         </div>
 
         <form method="post">
@@ -20,7 +19,7 @@
                 <div class="booking-sidebar">
                     <div class="form-section">
                         <label class="section-label" for="{{ form.dog.id_for_label }}">Choose a Dog</label>
-                        <p class="section-help">Only dogs connected to your account are shown here.</p>
+                        <p class="section-help">Dogs you've added to your account</p>
                         {{ form.dog }}
                         {% if form.dog.errors %}
                             <div class="form-errors">{{ form.dog.errors }}</div>
@@ -29,7 +28,7 @@
 
                     <div class="form-section">
                         <label class="section-label">Choose Services</label>
-                        <p class="section-help">Select one or more services.</p>
+                        <p class="section-help">Select one or more services</p>
 
                         <div class="services-panel">
                             {{ form.services }}
@@ -42,10 +41,10 @@
 
                     <div class="form-section">
                         <label class="section-label">Selected Appointment</label>
-                        <p class="section-help">Click an appointment on the calendar to choose it.</p>
+                        <p class="section-help">Currently available appointment times for {{ form.slot.value }}.</p>
 
                         <div id="selected-slot-box" class="selected-slot-box empty">
-                            No appointment selected yet.
+                            No date selected.
                         </div>
 
                         {% if form.slot.errors %}
@@ -60,9 +59,8 @@
 
                 <div class="booking-calendar-panel">
                     <div class="form-section calendar-section">
-                        <label class="section-label">Choose a Time</label>
-                        <p class="section-help">Available appointments appear directly on the calendar.</p>
-
+                        <label class="section-label">Select a Date</label>
+                        <p class="section-help">Click on a date to view available appointment times.</p>
                         <div id="calendar"></div>
                     </div>
                 </div>
@@ -74,16 +72,18 @@
 <link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/main.min.css" rel="stylesheet">
 <script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
 
+
 <script>
 document.addEventListener('DOMContentLoaded', function () {
     const calendarEl = document.getElementById('calendar');
-    const slotInput = document.getElementById('id_slot');
+    const slot = document.getElementById('id_slot');
     const selectedBox = document.getElementById('selected-slot-box');
 
-    let selectedEventId = slotInput.value || null;
-
+    let selectedEventId = slot.value || null;
+    
     const calendar = new FullCalendar.Calendar(calendarEl, {
         initialView: 'dayGridMonth',
+        selectable: true,
         height: 'auto',
         events: "{% url 'booking:booking_slots_json' %}",
         headerToolbar: {
@@ -97,18 +97,23 @@ document.addEventListener('DOMContentLoaded', function () {
             minute: '2-digit',
             meridiem: 'short'
         },
+        dateClick: function(info) {
+            alert('Date: ' + info.dateStr);
+            alert('Resource ID: ' + info.resource.id);
+            info.el.style.borderColor = 'red';
+        },
         eventClick: function(info) {
             const event = info.event;
 
             selectedEventId = event.id;
-            slotInput.value = event.id;
+            slot.value = event.id;
 
             calendar.getEvents().forEach(function(ev) {
                 ev.setProp('backgroundColor', '');
                 ev.setProp('borderColor', '');
             });
 
-            event.setProp('backgroundColor', '#244636');
+            event.setProp('backgroundColor', '#46243f');
             event.setProp('borderColor', '#244636');
 
             const startText = event.start.toLocaleString([], {
@@ -162,7 +167,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     .booking-header {
-        text-align: center;
+        text-align: left;
         margin-bottom: 28px;
     }
 
