@@ -16,7 +16,7 @@
 					<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
 				</a>
 				<ul class="flex justify-around text-black font-bold sm:flex-wrap sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
-					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}" style="font-size: 30;">Services</a> </li>
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="about" href="{% url 'accounts:about' %}">About Us</a> </li>
 				</ul>
@@ -65,7 +65,23 @@
 	{% block content %}
 	{% endblock %}
 
-	<footer></footer>
+	<footer>
+		<div class="flex justify-around items-center bg-green-200 py-5">
+			<a href="{% url 'accounts:accounts' %}">
+				<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
+			</a>
+			<ul class="flex flex-col md:flex-row lg:flex-row">
+				<li class="pr-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600">Contact Us</a></li>
+				<li class="px-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600">FAQs</a></li>
+				<li class="pl-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600" href="{% url 'accounts:services' %}">Services</a></li>
+			</ul>
+			<a>Logo for fb</a>
+		</div>
+		<hr class="mx-2">
+		<div class="bg-green-200">
+			<p class="text-center pt-5 pb-15">&#169 2026 Coppertail Grooming Co. All Rights Reserved.</p>
+		</div>
+	</footer>
 </body>
 </html>
 
