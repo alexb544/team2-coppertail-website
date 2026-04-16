@@ -24,7 +24,7 @@
     <div class="booking-card">
         <div class="booking-header">
             <h2>Confirm {{ dog.name }}’s Appointment</h2>
-            <p>Review the appointment details below before finalizing the booking.</p>
+            <p>Review your appointment details below</p>
         </div>
 
         {% if error %}
@@ -37,29 +37,36 @@
             <div class="summary-box">
                 <h3>Appointment Details</h3>
                 <div class="summary-row">
-                    <span>Arrival Time</span>
-                    <strong>{{ slot.start_time|date:"F j, Y \a\t g:i A" }}</strong>
-                </div>
-                <div class="summary-row">
-                    <span>Pickup Time</span>
-                    <strong>{{ slot.end_time|date:"F j, Y \a\t g:i A" }}</strong>
-                </div>
-                <div class="summary-row">
                     <span>Dog</span>
                     <strong>{{ dog.name }}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Arrival Time</span>
+                    <strong>{{ slot.start_time|date:"g:i A" }}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Appointment Date</span>
+                    <strong>{{ slot.start_time|date:"F j, Y" }}</strong>
                 </div>
             </div>
 
             <div class="summary-box">
                 <h3>Price Summary</h3>
-                <div class="summary-row">
-                    <span>Subtotal</span>
-                    <strong>${{ draft.subtotal }}</strong>
-                </div>
-                <div class="summary-row total-row">
-                    <span>Estimated Total</span>
-                    <strong>${{ draft.total }}</strong>
-                </div>
+                {% if draft.subtotal != draft.total %}
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <strong>${{ draft.subtotal }}</strong>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Estimated Total</span>
+                        <strong>${{ draft.total }}</strong>
+                    </div>
+                {% else %}
+                    <div class="summary-row total-row">
+                        <span>Estimated Total</span>
+                        <strong>${{ draft.total }}</strong>
+                    </div>
+                {% endif %}
             </div>
         </div>
 
@@ -267,13 +274,20 @@
     }
 
     .booking-button {
-        min-width: 220px;
+        font-size: 16px;
+        font-weight: 600;
+        min-width: 180px;
         padding: 12px 22px;
-        border-radius: 999px;
-        font-size: 1rem;
-        font-weight: 700;
+        border-radius: 8px;
+        margin-left: 35px;
+        background-color: #333;
+        color: #fff;
+        transition: background-color 0.2s ease;
     }
-
+    .booking-button:hover {
+        background-color: #555;
+    }
+    
     @media (max-width: 700px) {
         .summary-grid {
             grid-template-columns: 1fr;
