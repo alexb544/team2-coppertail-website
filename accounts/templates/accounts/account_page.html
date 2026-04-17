@@ -11,7 +11,7 @@
     }
 
     .sidebar {
-        width: 280px;
+        width: 300px;
         background-color: #fff;
         border-radius: 12px;
         padding: 25px;
@@ -93,7 +93,7 @@
 
     .dogs-grid {
         display: grid;
-        grid-template-columns: repeat(3, 1fr);
+        grid-template-columns: repeat(4, 1fr);
         gap: 20px;
     }
 
@@ -103,7 +103,9 @@
         padding: 15px;
         background-color: #fafafa;
         text-align: right;
+        max-width: 250px;
     }
+    
     .dog-card h4 {
         text-align: center;
         margin-bottom: 10px;
@@ -111,6 +113,7 @@
 
     .dog-card p {
         text-align: left;
+        padding: 5px;
     }
 
     .dog-card img {
@@ -149,6 +152,13 @@
         background-color: #555;
     }
 
+    .summary-row {
+        display: flex;
+        padding: 12px 0;
+        border-top: 1px solid #e3ece7;
+        color: #33413b;
+    }
+
     @media (max-width: 900px) {
         .page-container {
             flex-direction: column;
@@ -184,11 +194,19 @@
         {% endif %}
 
         <div class="user-info">
-            <h2>{{ user.get_full_name|default:user.username }}</h2>
-            <p><strong>Username: </strong>{{ user.username }}</p>
-            <p><strong>Phone:</strong> {{ profile.phone_number }}</p>
-            <p><strong>Email:</strong> {{ user.email }}</p>
-            <p><strong>Address:</strong> {{ profile.address }}</p>
+            <h2><b>{{ user.get_full_name|default:user.username }}</b></h2>
+            <div class="summary-row"> 
+                <span><strong>Username: </strong>{{ user.username }}</span>
+            </div>
+            <div class="summary-row"> 
+                <span><strong>Phone:</strong> {{ profile.phone_number }}</span>
+            </div>
+            <div class="summary-row"> 
+                <span><strong>Email:</strong> {{ user.email }}</span>
+            </div>
+            <div class="summary-row"> 
+                <span class="text-left"><strong>Address:</strong> {{ profile.address }}</span>
+            </div>
             <div class="section-action">
                 <a href="{% url 'accounts:edit_account' %}" class="action-button">Edit your profile</a>
             </div>
