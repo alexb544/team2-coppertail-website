@@ -3,34 +3,39 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<div class="bg-no-repeat bg-fixed bg-contain bg-center" style="background-image: url( '/../../accounts/static/accounts/home_page_background_2.png' ); height: 400px"></div>
-<h2 class = "font-semibold text-xl mx-15 pt-10">Welcome to Coppertail Grooming!</h2>
-<p class = "mx-15 ">
+<div class="bg-no-repeat bg-fixed bg-cover bg-bottom bg-clip-padding pt-10 h-40 sm:h-60 md:h-100 lg:h-120" style="background-image: url( '/../../accounts/static/accounts/dog_in_store.png' );"></div>
+<h2 class="font-semibold text-xl mx-15 pt-10">Welcome to Coppertail Grooming!</h2>
+<p class="mx-15 ">
 	Coppertail Grooming Co. is an elite all breed dog grooming boutique located in Lakeland, Florida.
 	<br><br>
 	Our goal is to treat your furry friend like our very own while offering a personalized, high-end
 	spa service!
 	<br><br>
 </p>
-<div class = "bg-green-100">
+<div class="bg-green-100">
 	<br>
-	<h2 class = "font-semibold text-xl mx-15 ">Our Mission</h2>
-	<p class = "mx-15 ">
+	<h2 class="font-semibold text-xl mx-15 ">Our Mission</h2>
+	<p class="mx-15 ">
 		We pride ourselves on giving our clients, and their fluffy companions, the best 
 		experience possible with every visit. We handle any-and-all of your dog's unique 
 		tastes and needs. From specialty shampoos to nail painting, we cover it all!
 		<br><br> 
-		Check out a full list of our services here: <a class = "underline text-blue-500 hover:text-orange-600" href="{% url 'accounts:services' %}">Services</a>
+		Check out a full list of our services here: <a class="underline text-blue-500 hover:text-orange-600" href="{% url 'accounts:services' %}">Services</a>
 		<br><br>
 	</p>
 </div>
-<h2 class = "font-semibold text-xl mx-15 pt-10">Location</h2>
-<div class="flex justify-around mx-15">
-	<p class = "">
-		We are a local business at <a class="underline text-blue-500 hover:text-orange-600" href="https://maps.app.goo.gl/PTFWTVKFvyN7vYuK6">119 Allamanda Dr, Lakeland, FL 33803</a>.
-	</p>
-	<br>
-	<iframe class="pl-5" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1761.1604782837624!2d-81.9570696!3d28.0146645!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd3f3f3866dec9%3A0x223bfc4e711e9cee!2sCopper%20Tail%20Grooming%20Co.!5e0!3m2!1sen!2sus!4v1776350026534!5m2!1sen!2sus" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+<h2 class="font-semibold text-xl mx-15 pt-10">Location</h2>
+<div class="flex justify-between mx-15">
+	<div>
+		<p class="">
+			Our boutique is at 
+			<a class="underline text-blue-500 hover:text-orange-600" href="https://maps.app.goo.gl/PTFWTVKFvyN7vYuK6">119 Allamanda Dr, Lakeland, FL 33803</a>.
+			<br><br>We're open Monday and Tuesday from 8 am to 4:30 pm, and Wednesday through Friday from 7:30 am to 5 pm!
+		</p>
+		<br>
+		<iframe class="pl-5" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1761.1604782837624!2d-81.9570696!3d28.0146645!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd3f3f3866dec9%3A0x223bfc4e711e9cee!2sCopper%20Tail%20Grooming%20Co.!5e0!3m2!1sen!2sus!4v1776350026534!5m2!1sen!2sus" width="400" height="300" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+	</div>
+	<img />
 </div>
 <br><br>
 {% endblock %}

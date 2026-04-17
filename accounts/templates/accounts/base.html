@@ -17,29 +17,31 @@
 				</a>
 				<ul class="flex justify-around text-black font-bold sm:flex-wrap sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}" style="font-size: 30;">Services</a> </li>
-					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="about" href="{% url 'accounts:about' %}">About Us</a> </li>
 				</ul>
 			</div>
-			<div class="group">
-				<button class="flex items-center px-3 py-2 text-black hover:text-gray-600 hover:border-white">
-					<img class="h-7 md:h-10 lg:h-10 xl:h-12" src="{% static 'accounts/default_avatar.png' %}" alt="default profile" />
-				</button>
-				{% if user.is_authenticated %}
-				<div class="absolute w-25 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
-					<div class="flex flex-col">
-						<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:account' %}">My Account</a>
-						<form class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-link-btn">Log Out</button></form>
+			<div class="flex items-center">
+				<a class="xs:mx-2 sm:mx-3 md:mx-3 lg:mx-5 xl:mx-7 w-25 h-10 py-2 text-center rounded border bg-white hover:bg-black text-black hover:text-white" href="{% url 'booking:booking_create' %}">Book Now</a>
+				<div class="group">
+					<button class="flex items-center px-3 py-2 text-black hover:text-gray-600 hover:border-white">
+						<img class="h-7 md:h-10 lg:h-10 xl:h-12" src="{% static 'accounts/default_avatar.png' %}" alt="default profile" />
+					</button>
+					{% if user.is_authenticated %}
+					<div class="absolute w-25 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+						<div class="flex flex-col">
+							<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:account' %}">My Account</a>
+							<form class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-link-btn">Log Out</button></form>
+						</div>
 					</div>
-				</div>
-				{% else %}
-				<div class="absolute w-20 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
-					<div class="flex flex-col">
-						<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:login' %}">Log In</a>
-						<a class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" href="{% url 'accounts:register' %}">Sign Up</a>
+					{% else %}
+					<div class="absolute w-20 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+						<div class="flex flex-col">
+							<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:login' %}">Log In</a>
+							<a class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" href="{% url 'accounts:register' %}">Sign Up</a>
+						</div>
 					</div>
+					{% endif %}
 				</div>
-				{% endif %}
 			</div>
 		</nav>
 		<hr class="color-green-800">
@@ -71,11 +73,12 @@
 				<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
 			</a>
 			<ul class="flex flex-col md:flex-row lg:flex-row">
-				<li class="pr-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600">Contact Us</a></li>
-				<li class="px-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600">FAQs</a></li>
-				<li class="pl-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600" href="{% url 'accounts:services' %}">Services</a></li>
+				<li class="md:pr-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600 font-semibold">Contact Us</a></li>
+				<li class="md:px-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600 font-semibold">FAQs</a></li>
+				<li class="md:pl-7 lg:px-17 xl:px-25"><a class="hover:text-orange-600 font-semibold" href="{% url 'accounts:services' %}">Services</a></li>
 			</ul>
-			<a>Logo for fb</a>
+			<a href="https://www.facebook.com/coppertailgroomingco/"><img class="h-8" style="filter:brightness(0%);" src="../../accounts/static/accounts/facebook_logo_transparent.png" alt="Facebook"/></a>
+			<a href="https://www.instagram.com/coppertailgroomingco/"><img class="h-8" style="filter:brightness(0%);" src="../../accounts/static/accounts/instagram_logo.png" alt="Instagram"/></a>
 		</div>
 		<hr class="mx-2">
 		<div class="bg-green-200">
