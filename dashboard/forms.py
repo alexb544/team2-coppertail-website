@@ -1,6 +1,6 @@
 from django import forms
 from services.models import Service
-from booking.models import TimeSlot
+from booking.models import TimeSlot, Booking
 
 class ServiceForm(forms.ModelForm):
     class Meta:
@@ -39,4 +39,15 @@ class TimeSlotForm(forms.ModelForm):
             'is_open': forms.CheckboxInput(attrs={
                 'class': 'form-checkbox'
             }),
+        }
+
+class BookingForm(forms.ModelForm):
+    class Meta:
+        model = Booking
+        fields = ['status', 'notes', 'subtotal', 'total']
+        widgets = {
+            'status': forms.Select(attrs={'class': 'form-input'}),
+            'notes': forms.Textarea(attrs={'class': 'form-input', 'rows': 3}),
+            'subtotal': forms.NumberInput(attrs={'class': 'form-input', 'step': '0.01'}),
+            'total': forms.NumberInput(attrs={'class': 'form-input', 'step': '0.01'}),
         }

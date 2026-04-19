@@ -63,7 +63,8 @@ def accounts(request):
 def user_account(request):
     profile = Profile.objects.get(user=request.user)
     dogs = profile.dogs.all() 
-    bookings = Booking.objects.filter(user=request.user).order_by('slot')
+    bookings = Booking.objects.filter(user=request.user, status='CONFIRMED').order_by('slot')
+    #bookings = Booking.objects.filter(user=request.user).order_by('slot')
     return render(request, "accounts/account_page.html", {
         'user': request.user,
         'profile': profile,

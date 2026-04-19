@@ -16,4 +16,9 @@ urlpatterns = [
     path('timeslots/<int:pk>/edit/', views.edit_timeslot, name='edit_timeslot'),
     path('timeslots/<int:pk>/delete/', views.delete_timeslot, name='delete_timeslot'),
     path('timeslots/<int:pk>/toggle/', views.toggle_timeslot, name='toggle_timeslot'),
+
+    #Bookings
+    path('bookings/<int:pk>/edit/', views.edit_booking, name='edit_booking'),
+    path('bookings/<int:pk>/delete/', views.delete_booking, name='delete_booking'),
+    path('bookings/<int:pk>/status/', views.update_booking_status, name='update_booking_status'),
 ]
