@@ -47,6 +47,7 @@ urlpatterns = [
     path('account/dog/<int:dog_id>/edit/', views.edit_dog, name='edit_dog'),
     # Add this line:
     path('contact/', ContactView.as_view(), name='contact'),
+    path('faq/', views.faq_view, name='faq'),
 
 ]
 

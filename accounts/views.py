@@ -196,3 +196,24 @@ class ContactView(FormView):
             
         messages.success(self.request, "Success! We'll bark back as soon as we can.")
         return super().form_valid(form)
+
+def faq_view(request):
+    faqs = [
+        {
+            "q": "What vaccinations does my dog need?",
+            "a": "For the safety of all our furry guests, we require proof of Rabies, Distemper, and Bordetella vaccinations."
+        },
+        {
+            "q": "How long does a grooming session take?",
+            "a": "Depending on the size of the dog and the condition of their coat, the time will vary."
+        },
+        {
+            "q": "Do you groom aggressive dogs?",
+            "a": "We handle every dog with care. However, for the safety of our staff, we ask that you disclose any history of aggression so we can determine the best approach."
+        },
+        {
+            "q": "Where are you located in Lakeland?",
+            "a": "We are located at 119 Allamanda Drive, Lakeland FL 33803"
+        },
+    ]
+    return render(request, 'accounts/faq.html', {'faqs': faqs})

@@ -1,0 +1,28 @@
+{% extends 'accounts/base.html' %}
+
+{% block content %}
+<div class="bg-white py-12 px-4 sm:px-6 lg:px-8">
+    <div class="max-w-3xl mx-auto">
+        <h2 class="text-3xl font-extrabold text-gray-900 text-center mb-12">Frequently Asked Questions</h2>
+        
+        <dl class="space-y-6 divide-y divide-gray-200">
+            {% for item in faqs %}
+            <div class="pt-6">
+                <dt class="text-lg">
+                    <span class="font-bold text-black-600">Q: {{ item.q }}</span>
+                </dt>
+                <dd class="mt-2 text-base text-gray-500">
+                    {{ item.a }}
+                </dd>
+            </div>
+            {% endfor %}
+        </dl>
+
+        <div class="mt-12 p-6 bg-green-50 rounded-xl text-center">
+            <p class="text-gray-700">Still have questions? Send us a question on our 
+                <a href="{% url 'accounts:contact' %}" class="text-black-600 font-bold hover:underline">Contact Page</a>.
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}
