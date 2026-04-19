@@ -13,7 +13,10 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, DogForm,
 from .models import Profile, Dog
 from services.models import Service
 from booking.models import Booking
-
+from .forms import ContactForm
+from django.views.generic import FormView 
+from django.core.mail import EmailMessage, BadHeaderError
+from django.http import HttpResponse 
 
 class CustomLoginView(LoginView):
     template_name = "accounts/login.html"
@@ -163,3 +166,33 @@ def services_view(request):
 
 def about(request):
     return render(request, 'accounts/about.html')
+
+class ContactView(FormView):
+    template_name = 'accounts/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('accounts:contact')
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        user_email = form.cleaned_data['email']
+        message = form.cleaned_data['message']
+        
+        subject = f"Coppertail Inquiry from {name}"
+        body = f"From: {user_email}\n\nMessage:\n{message}"
+
+        # Using EmailMessage class allows for the reply_to argument
+        email = EmailMessage(
+            subject=subject,
+            body=body,
+            from_email='noreply@coppertail.com',
+            to=['groomingcoppertail@gmail.com'],
+            reply_to=[user_email], 
+        )
+
+        try:
+            email.send() # This calls the actual send method
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+            
+        messages.success(self.request, "Success! We'll bark back as soon as we can.")
+        return super().form_valid(form)
