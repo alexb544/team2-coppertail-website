@@ -13,7 +13,10 @@ from .forms import UserRegisterForm, UserUpdateForm, ProfileUpdateForm, DogForm,
 from .models import Profile, Dog
 from services.models import Service
 from booking.models import Booking
-
+from .forms import ContactForm
+from django.views.generic import FormView 
+from django.core.mail import EmailMessage, BadHeaderError
+from django.http import HttpResponse 
 
 class CustomLoginView(LoginView):
     template_name = "accounts/login.html"
@@ -163,3 +166,54 @@ def services_view(request):
 
 def about(request):
     return render(request, 'accounts/about.html')
+
+class ContactView(FormView):
+    template_name = 'accounts/contact.html'
+    form_class = ContactForm
+    success_url = reverse_lazy('accounts:contact')
+
+    def form_valid(self, form):
+        name = form.cleaned_data['name']
+        user_email = form.cleaned_data['email']
+        message = form.cleaned_data['message']
+        
+        subject = f"Coppertail Inquiry from {name}"
+        body = f"From: {user_email}\n\nMessage:\n{message}"
+
+        # Using EmailMessage class allows for the reply_to argument
+        email = EmailMessage(
+            subject=subject,
+            body=body,
+            from_email='noreply@coppertail.com',
+            to=['groomingcoppertail@gmail.com'],
+            reply_to=[user_email], 
+        )
+
+        try:
+            email.send() # This calls the actual send method
+        except BadHeaderError:
+            return HttpResponse('Invalid header found.')
+            
+        messages.success(self.request, "Success! We'll bark back as soon as we can.")
+        return super().form_valid(form)
+
+def faq_view(request):
+    faqs = [
+        {
+            "q": "What vaccinations does my dog need?",
+            "a": "For the safety of all our furry guests, we require proof of Rabies, Distemper, and Bordetella vaccinations."
+        },
+        {
+            "q": "How long does a grooming session take?",
+            "a": "Depending on the size of the dog and the condition of their coat, the time will vary."
+        },
+        {
+            "q": "Do you groom aggressive dogs?",
+            "a": "We handle every dog with care. However, for the safety of our staff, we ask that you disclose any history of aggression so we can determine the best approach."
+        },
+        {
+            "q": "Where are you located in Lakeland?",
+            "a": "We are located at 119 Allamanda Drive, Lakeland FL 33803"
+        },
+    ]
+    return render(request, 'accounts/faq.html', {'faqs': faqs})

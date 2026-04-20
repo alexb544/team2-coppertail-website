@@ -4,7 +4,7 @@ from .views import CustomLoginView, ResetPasswordView
 from django.contrib.auth import views as auth_views
 from django.conf import settings
 from django.conf.urls.static import static
-
+from .views import ContactView
 app_name = 'accounts'
 
 urlpatterns = [
@@ -44,8 +44,14 @@ urlpatterns = [
     path('account/edit/', views.edit_account, name='edit_account'),
     path('account/add_dog/', views.add_dog, name='add_dog'),
     path('account/dog/<int:dog_id>/edit/', views.edit_dog, name='edit_dog'),
+    path('account/dog/<int:dog_id>/edit/', views.edit_dog, name='edit_dog'),
+    # Add this line:
+    path('contact/', ContactView.as_view(), name='contact'),
+    path('faq/', views.faq_view, name='faq'),
+
 ]
 
 # This tells Django where to look for your uploaded photos
 if settings.DEBUG:
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    

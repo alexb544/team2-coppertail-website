@@ -1,7 +1,50 @@
-{% extends "accounts/base.html" %}
+{% extends 'accounts/base.html' %}
+
 {% block content %}
-<h1>About Us</h1>
-<p>Welcome to Coppertail Grooming. We are a dog grooming company based out in lakeland,
- If you have any questions about services or products, contact alex at alexblake544@gmail.com
-</p>
+<div class="bg-white">
+  <div class="relative py-16 bg-green-50">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+      <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
+        About <span class="text-black-600">Coppertail</span> Grooming
+      </h1>
+      <p class="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
+        Providing premium, stress-free grooming services for your furry friends right here in Lakeland, Florida.
+      </p>
+    </div>
+  </div>
+
+  <div class="py-16 overflow-hidden">
+    <div class="max-w-7xl mx-auto px-4 space-y-8 sm:px-6 lg:px-8">
+      <div class="text-lg max-w-prose mx-auto">
+        <h2 class="text-3xl text-gray-900 font-semibold tracking-wide uppercase text-center">Our Mission</h2>
+        <p class="mt-8 text-gray-500 leading-8">
+        Coppertail Grooming Co is an elite all breed dog grooming boutique.
+        </p>
+      </div>
+    </div>
+  </div>
+
+  <div class="bg-gray-50 py-16">
+    <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div class="lg:text-center">
+        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Get in Touch</h2>
+        <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
+          Want more information?
+        </p>
+        <p class="mt-4 max-w-2xl text-xl text-gray-500 lg:mx-auto">
+           Have questions about our services or specific products? 
+          We're here to help!
+        </p>
+        <div class="mt-10 flex justify-center gap-4">
+            <a href="{% url 'accounts:contact' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10">
+                Contact Us
+            </a>
+            <a href="{% url 'booking:booking_create' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 md:py-4 md:text-lg md:px-10">
+                Book a Session
+            </a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
 {% endblock %}
