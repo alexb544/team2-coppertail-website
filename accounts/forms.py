@@ -67,6 +67,9 @@ class LoginForm(AuthenticationForm):
             'id': 'password',
         })
     )
+    
+    remember_me = forms.BooleanField(required=False)
+
 class ContactForm(forms.Form):
     name = forms.CharField(
         max_length=100, 
@@ -88,5 +91,3 @@ class ContactForm(forms.Form):
             'rows': 4
         })
     )
-
-    remember_me = forms.BooleanField(required=False)
