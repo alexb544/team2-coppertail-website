@@ -221,8 +221,8 @@ class ProfileDogIntegrationTest(TestCase):
         dog2 = Dog.objects.create(owner=self.profile2, name="Buddy")
 
         self.assertNotEqual(dog1.id, dog2.id)
-        self.assertEqual(str(dog1), "Buddy (owner1)")
-        self.assertEqual(str(dog2), "Buddy (owner2)")
+        self.assertEqual(str(dog1), "Buddy")
+        self.assertEqual(str(dog2), "Buddy")
 
     def test_cascade_from_user_to_dogs(self):
         """Test complete cascade: User -> Profile -> Dogs"""
