@@ -3,55 +3,595 @@
 {% block title %}Create Booking{% endblock %}
 
 {% block content %}
-<h2 class="header1">Book an Appointment</h2>
-<br>
-
-<div class="info">
-    <form method="post">
-        {% csrf_token %}
-        {{ form.non_field_errors }}
-
-        <p>
-            Select a Time:<br>
-            {{ form.slot }}<br>
-            {{ form.slot.errors }}
-        </p>
-
-        <p>
-            Choose a Dog:<br>
-            {{ form.dog }}<br>
-            {{ form.dog.errors }}
-        </p>
-
-        <p><strong>Select Service(s):</strong></p>
-        <div class="services-group">
-            {{ form.services }}
-            {{ form.services.errors }}
+<div class="booking-shell">
+    <div class="booking-card">
+        <div class="booking-header">
+            <h2><b>Book an Appointment</b></h2>
         </div>
 
-        <div class="actions">
-            <button class="button1" type="submit">Review Booking</button>
-        </div>
-    </form>
+        <form method="post">
+            {% csrf_token %}
+            {{ form.non_field_errors }}
+
+            <input type="hidden" name="slot" id="id_slot" value="{{ form.slot.value|default:'' }}">
+
+            <div class="booking-layout">
+                <div class="booking-sidebar">
+                    <div class="form-section">
+                        <label class="section-label" for="{{ form.dog.id_for_label }}">Choose a Dog</label>
+                        <p class="section-help">Select a dog from your account</p>
+                        {{ form.dog }}
+
+                        {% if form.dog.errors %}
+                            <div class="form-errors">{{ form.dog.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-section">
+                        <label class="section-label">Choose Services</label>
+                        <p class="section-help">Select one or more</p>
+
+                        <div class="services-panel">
+                            {{ form.services }}
+                        </div>
+
+                        {% if form.services.errors %}
+                            <div class="form-errors">{{ form.services.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-section">
+                        <label class="section-label">Select Appointment Time</label>
+                        
+                        <div id="selected-date-text" class="selected-date-text empty">
+                            <p class="section-help">Times available for </p>
+                        </div>
+
+                        <div id="selected-slot-box" class="selected-slot-box empty">
+                            No date selected.
+                        </div>
+
+                        {% if form.slot.errors %}
+                            <div class="form-errors">{{ form.slot.errors }}</div>
+                        {% endif %}
+                    </div>
+
+                    <div class="form-actions">
+                        <button class="button1 booking-button" type="submit">Review Booking</button>
+                    </div>
+                </div>
+
+                <div class="booking-calendar-panel">
+                    <div class="form-section calendar-section">
+                        <label class="section-label">Select a Date</label>
+                        <p class="section-help">Click on a date to view available appointment times.</p>
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+        </form>
+    </div>
 </div>
 
+<link href="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/main.min.css" rel="stylesheet">
+<script src="https://cdn.jsdelivr.net/npm/fullcalendar@6.1.19/index.global.min.js"></script>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const calendarEl = document.getElementById('calendar');
+    const slot = document.getElementById('id_slot');
+    const selectedBox = document.getElementById('selected-slot-box');
+    const selectedDate = document.getElementById('selected-date-text');
+
+    let selectedEventId = slot.value || null;
+    let selectedDateStr = null;
+
+    function sameDay(date1, date2) {
+        return date1.getFullYear() === date2.getFullYear() &&
+               date1.getMonth() === date2.getMonth() &&
+               date1.getDate() === date2.getDate();
+    }
+
+    function formatLocalDateString(date) {
+        const year = date.getFullYear();
+        const month = String(date.getMonth() + 1).padStart(2, '0');
+        const day = String(date.getDate()).padStart(2, '0');
+        return `${year}-${month}-${day}`;
+    }
+
+    function formatDateHeading(date) {
+        return date.toLocaleString([], {
+            month: 'long',
+            day: 'numeric'
+        });
+    }
+
+    function formatTimeOnly(date) {
+        return date.toLocaleString([], {
+            hour: 'numeric',
+            minute: '2-digit'
+        });
+    }
+
+    function getDatesWithSlots(calendar) {
+        const dateSet = new Set();
+
+        calendar.getEvents().forEach(event => {
+            if (event.start) {
+                dateSet.add(formatLocalDateString(event.start));
+            }
+        });
+
+        return dateSet;
+    }
+
+    function updateSelectedDayHighlight() {
+        document.querySelectorAll('.fc-daygrid-day').forEach(dayEl => {
+            dayEl.classList.remove('selected-calendar-day');
+        });
+
+        if (!selectedDateStr) return;
+
+        const activeDay = document.querySelector(`.fc-daygrid-day[data-date="${selectedDateStr}"]`);
+        if (activeDay) {
+            activeDay.classList.add('selected-calendar-day');
+        }
+    }
+
+    function updateAvailableDayMarkers(calendar) {
+        const datesWithSlots = getDatesWithSlots(calendar);
+
+        document.querySelectorAll('.fc-daygrid-day').forEach(dayEl => {
+            dayEl.classList.remove('has-open-slots');
+
+            const dateStr = dayEl.getAttribute('data-date');
+            if (datesWithSlots.has(dateStr)) {
+                dayEl.classList.add('has-open-slots');
+            }
+        });
+    }
+
+    function renderSlotsForDate(clickedDate, calendar) {
+        selectedDateStr = formatLocalDateString(clickedDate);
+        updateSelectedDayHighlight();
+
+        const allEvents = calendar.getEvents();
+        const matchingEvents = allEvents.filter(event => event.start && sameDay(event.start, clickedDate));
+
+        selectedDate.innerHTML = "Times available for " + formatDateHeading(clickedDate);
+        selectedDate.classList.remove('empty');
+
+        if (matchingEvents.length === 0) {
+            selectedBox.innerHTML = "No open times available for this date.";
+            selectedBox.classList.add('empty');
+            return;
+        }
+
+        matchingEvents.sort((a, b) => a.start - b.start);
+
+        selectedBox.classList.remove('empty');
+        selectedBox.innerHTML = matchingEvents.map(event => {
+            const isSelected = event.id === selectedEventId ? ' selected-time' : '';
+            return `
+                <button type="button"
+                        class="time-slot-button${isSelected}"
+                        data-event-id="${event.id}">
+                    ${formatTimeOnly(event.start)}
+                </button>
+            `;
+        }).join('');
+
+        document.querySelectorAll('.time-slot-button').forEach(button => {
+            button.addEventListener('click', function () {
+                const eventId = this.dataset.eventId;
+                const event = calendar.getEventById(eventId);
+
+                if (!event) return;
+
+                selectedEventId = event.id;
+                slot.value = event.id;
+
+                calendar.getEvents().forEach(function(ev) {
+                    ev.setProp('backgroundColor', '');
+                    ev.setProp('borderColor', '');
+                });
+
+                event.setProp('backgroundColor', '#46243f');
+                event.setProp('borderColor', '#46243f');
+
+                renderSlotsForDate(event.start, calendar);
+            });
+        });
+    }
+
+    const calendar = new FullCalendar.Calendar(calendarEl, {
+        initialView: 'dayGridMonth',
+        selectable: true,
+        height: 'auto',
+        events: "{% url 'booking:booking_slots_json' %}",
+        headerToolbar: {
+            left: 'prev,next today',
+            center: 'title',
+            right: ''
+        },
+        displayEventTime: false,
+        eventTimeFormat: {
+            hour: 'numeric',
+            minute: '2-digit',
+            meridiem: 'short'
+        },
+
+        dateClick: function(info) {
+            renderSlotsForDate(info.date, calendar);
+        },
+
+        eventClick: function(info) {
+            const event = info.event;
+
+            selectedEventId = event.id;
+            slot.value = event.id;
+
+            calendar.getEvents().forEach(function(ev) {
+                ev.setProp('backgroundColor', '');
+                ev.setProp('borderColor', '');
+            });
+
+            event.setProp('backgroundColor', '#46243f');
+            event.setProp('borderColor', '#46243f');
+
+            renderSlotsForDate(event.start, calendar);
+        },
+
+        eventDidMount: function(info) {
+            if (selectedEventId && info.event.id === selectedEventId) {
+                info.event.setProp('backgroundColor', '#46243f');
+                info.event.setProp('borderColor', '#46243f');
+            }
+        },
+
+        dayCellDidMount: function() {
+            updateSelectedDayHighlight();
+            updateAvailableDayMarkers(calendar);
+        },
+
+        datesSet: function() {
+            updateSelectedDayHighlight();
+            updateAvailableDayMarkers(calendar);
+        },
+
+        eventsSet: function() {
+            updateAvailableDayMarkers(calendar);
+
+            if (selectedEventId) {
+                const savedEvent = calendar.getEventById(selectedEventId);
+                if (savedEvent && savedEvent.start) {
+                    renderSlotsForDate(savedEvent.start, calendar);
+                }
+            }
+        }
+    });
+
+    calendar.render();
+});
+</script>
+
 <style>
-    .actions {
-        display: flex;
-        justify-content: center;
-        margin-top: 10px;
-    }
-
-    .services-group {
-        display: flex;
-        justify-content: center;
-    }
-
-    .services-group ul {
-        display: inline-block;
-        text-align: left;
+    .booking-shell {
+        width: 100%;
         margin: 0;
-        padding-left: 20px;
+        padding: 0;
+    }
+
+    .booking-card {
+        width: 100%;
+        background: #fcfcfa;
+        border: 1px solid #d9e3dd;
+        border-radius: 18px;
+        padding: 32px 28px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+    }
+
+    .booking-header {
+        text-align: left;
+        margin-bottom: 28px;
+    }
+
+    .booking-header h2 {
+        margin: 0 0 10px;
+        font-size: 2rem;
+        color: #1f2937;
+    }
+
+    .booking-header p {
+        margin: 0;
+        color: #5f6b66;
+        font-size: 1rem;
+    }
+
+    .booking-layout {
+        display: grid;
+        grid-template-columns: 360px minmax(0, 1fr);
+        gap: 24px;
+        align-items: start;
+        width: 100%;
+    }
+
+    .booking-sidebar {
+        display: grid;
+        gap: 18px;
+        width: 100%;
+    }
+
+    .booking-calendar-panel {
+        min-width: 0;
+        width: 100%;
+        max-width: 1200px;
+        margin-left: 5px;
+        margin-top: -80px;
+    }
+
+    .calendar-section {
+        height: 100%;
+    }
+
+    .form-section {
+        background: #f7faf8;
+        border: 1px solid #dde8e1;
+        border-radius: 14px;
+        padding: 18px;
+    }
+
+    .section-label {
+        display: block;
+        font-size: 1.05rem;
+        font-weight: 700;
+        color: #1f2937;
+        margin-bottom: 6px;
+    }
+
+    .section-help {
+        margin: 0 0 12px;
+        color: #66736d;
+        font-size: 0.95rem;
+    }
+
+    #calendar {
+        width: 100%;
+        background: #ffffff;
+        border: 1px solid #cfe0d6;
+        border-radius: 12px;
+        padding: 12px;
+    }
+
+    .fc {
+        width: 100%;
+    }
+
+    .fc .fc-daygrid-day-frame {
+        min-height: 110px;
+    }
+
+    .fc .fc-day-today {
+        background: #e7f4ea !important;
+    }
+
+    .fc .fc-day-today .fc-daygrid-day-number {
+        font-weight: 700;
+    }
+
+    .fc .fc-daygrid-event {
+        display: none !important;
+    }
+
+    .fc .fc-daygrid-more-link {
+        display: none !important;
+    }
+
+    .fc .fc-event-title {
+        white-space: normal;
+        overflow: visible;
+    }
+
+    .fc .fc-toolbar-title {
+        font-size: 1.5rem;
+        font-weight: 700;
+        color: #1f2937;
+    }
+
+    .fc .fc-button {
+        background: #244636;
+        border-color: #244636;
+        transition: background-color 0.2s ease;
+    }
+
+    .fc .fc-button:hover,
+    .fc .fc-button:focus {
+        background: #1b3529;
+        border-color: #1b3529;
+    }
+
+    .fc .fc-daygrid-day.has-open-slots .fc-daygrid-day-frame {
+        position: relative;
+    }
+
+    .fc .fc-daygrid-day.has-open-slots .fc-daygrid-day-frame::after {
+        content: "";
+        position: absolute;
+        left: 50%;
+        transform: translateX(-50%);
+        width: 10px;
+        height: 10px;
+        border-radius: 999px;
+        background: #244636;
+    }
+
+    .fc .fc-event {
+        cursor: pointer;
+        border-radius: 6px;
+        padding: 2px 4px;
+        font-size: 0.9rem;
+    }
+
+    .form-section select {
+        width: 100%;
+        padding: 12px 14px;
+        border-radius: 10px;
+        border: 1px solid #bccdc3;
+        background: #ffffff;
+        font-size: 1rem;
+    }
+
+    .services-panel {
+        background: #ffffff;
+        border: 1px solid #cfe0d6;
+        border-radius: 12px;
+        padding: 14px 16px;
+    }
+
+    .services-panel ul {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .services-panel li {
+        padding: 10px 0;
+        border-bottom: 1px solid #e7efeb;
+    }
+
+    .services-panel li:last-child {
+        border-bottom: none;
+    }
+
+    .services-panel label {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #1f2937;
+        font-weight: 500;
+        cursor: pointer;
+    }
+
+    .services-panel input[type="checkbox"] {
+        width: 18px;
+        height: 18px;
+    }
+
+    .selected-date-text {
+        margin: 0 0 12px;
+        color: #66736d;
+        font-size: 0.95rem;
+    }
+
+    .selected-date-text.empty {
+        margin: 0 0 12px;
+        color: #66736d;
+        font-size: 0.95rem;
+    }
+
+    .selected-slot-box {
+        padding: 12px 14px;
+        border-radius: 10px;
+        background: #e8f2ec;
+        border: 1px solid #b9d1c0;
+        color: #1f2937;
+        font-weight: 600;
+    }
+
+    .time-slot-button {
+        display: block;
+        width: 100%;
+        text-align: left;
+        margin-bottom: 8px;
+        padding: 10px 12px;
+        border: 1px solid #b9d1c0;
+        border-radius: 8px;
+        background: #ffffff;
+        color: #1f2937;
+        font-weight: 600;
+        cursor: pointer;
+    }
+
+    .time-slot-button:hover {
+        background: #f3f8f5;
+    }
+
+    .time-slot-button.selected-time {
+        background: #46243f;
+        border-color: #46243f;
+        color: #ffffff;
+    }
+
+    .selected-slot-box.empty {
+        background: #f3f4f6;
+        border-color: #d1d5db;
+        color: #6b7280;
+    }
+
+    .form-errors {
+        margin-top: 10px;
+        padding: 10px 12px;
+        border-radius: 10px;
+        background: #fbeaea;
+        border: 1px solid #e6b8b8;
+        color: #8b1e1e;
+        font-weight: 600;
+    }
+
+    .form-actions {
+        display: flex;
+        justify-content: center;
+    }
+
+    .booking-button {
+        font-size: 16px;
+        font-weight: 600;
+        min-width: 220px;
+        padding: 12px 22px;
+        border-radius: 8px;
+        background-color: #333;
+        color: #fff;
+        transition: background-color 0.2s ease;
+    }
+    .booking-button:hover {
+        background-color: #555;
+    }
+
+    .selected-calendar-day {
+        background: #f3e8f1 !important;
+    }
+
+    .selected-calendar-day .fc-daygrid-day-number {
+        background: #46243f;
+        color: #ffffff !important;
+        border-radius: 999px;
+        padding: 4px 8px;
+        font-weight: 700;
+    }
+
+    .selected-calendar-day .fc-daygrid-day-frame {
+        background: #f8eef6;
+        border-radius: 8px;
+    }
+
+    @media (max-width: 980px) {
+        .booking-layout {
+            grid-template-columns: 1fr;
+        }
+    }
+
+    @media (max-width: 640px) {
+        .booking-card {
+            padding: 24px 18px;
+        }
+
+        .booking-header h2 {
+            font-size: 1.65rem;
+        }
+
+        .fc .fc-daygrid-day-frame {
+            min-height: 90px;
+        }
     }
 </style>
 {% endblock %}

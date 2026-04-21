@@ -1,67 +1,309 @@
-{% extends 'booking/../../../accounts/templates/accounts/base.html' %}
+{% extends "accounts/base.html" %}
 
 {% block title %}Confirm Booking{% endblock %}
 
 {% block content %}
-<h2 class="header1">Confirm {{ dog.name }}'s Appointment</h2>
-
-{% if error %}
-    <p class="booking-error">{{ error }}</p>
-{% endif %}
-
-<div class="info">
-    <br>
-    <div class="services-box">
-        <h3 class="header1 selected-services-title">Services:</h3>
-        <ul class="service-list">
-            {% for service in services %}
-                <li>{{ service.service_name }} - ${{ service.base_price }}</li>
-            {% empty %}
-                <li>No services selected.</li>
-            {% endfor %}
-        </ul>
+<div class="booking-shell">
+    <div class="booking-steps">
+        <div class="step completed">
+            <span class="step-number">1</span>
+            <span class="step-label">Choose Details</span>
+        </div>
+        <div class="step-line active"></div>
+        <div class="step active">
+            <span class="step-number">2</span>
+            <span class="step-label">Confirm</span>
+        </div>
+        <div class="step-line"></div>
+        <div class="step">
+            <span class="step-number">3</span>
+            <span class="step-label">Success</span>
+        </div>
     </div>
 
-    <p><strong>Arrival Time:</strong> {{ slot.start_time }}</p>
-    <p><strong>Pickup Time:</strong> {{ slot.end_time }}</p><br>
-    <p><strong>Subtotal:</strong> ${{ draft.subtotal }}</p>
-    <p><strong>Estimated Total:</strong> ${{ draft.total }}</p><br>
+    <div class="booking-card">
+        <div class="booking-header">
+            <h2>Confirm {{ dog.name }}’s Appointment</h2>
+            <p>Review your appointment details below</p>
+        </div>
 
-    <div class="actions">
-        <form method="post">
-            {% csrf_token %}
-            <button class="button1" type="submit">Confirm Booking</button>
-        </form>
+        {% if error %}
+            <div class="booking-error">
+                {{ error }}
+            </div>
+        {% endif %}
+
+        <div class="summary-grid">
+            <div class="summary-box">
+                <h3>Appointment Details</h3>
+                <div class="summary-row">
+                    <span>Dog</span>
+                    <strong>{{ dog.name }}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Arrival Time</span>
+                    <strong>{{ slot.start_time|date:"g:i A" }}</strong>
+                </div>
+                <div class="summary-row">
+                    <span>Appointment Date</span>
+                    <strong>{{ slot.start_time|date:"F j, Y" }}</strong>
+                </div>
+            </div>
+
+            <div class="summary-box">
+                <h3>Price Summary</h3>
+                {% if draft.subtotal != draft.total %}
+                    <div class="summary-row">
+                        <span>Subtotal</span>
+                        <strong>${{ draft.subtotal }}</strong>
+                    </div>
+                    <div class="summary-row total-row">
+                        <span>Estimated Total</span>
+                        <strong>${{ draft.total }}</strong>
+                    </div>
+                {% else %}
+                    <div class="summary-row total-row">
+                        <span>Estimated Total</span>
+                        <strong>${{ draft.total }}</strong>
+                    </div>
+                {% endif %}
+            </div>
+        </div>
+
+        <div class="services-box">
+            <h3>Selected Services</h3>
+            <ul class="service-list">
+                {% for service in services %}
+                    <li>
+                        <span>{{ service.service_name }}</span>
+                        <strong>${{ service.base_price }}</strong>
+                    </li>
+                {% empty %}
+                    <li class="empty-service">No services selected.</li>
+                {% endfor %}
+            </ul>
+        </div>
+
+        <div class="form-actions">
+            <a class="secondary-button" href="{% url 'booking:booking_create' %}">Go Back</a>
+
+            <form method="post">
+                {% csrf_token %}
+                <button class="button1 booking-button" type="submit">Confirm Booking</button>
+            </form>
+        </div>
     </div>
 </div>
 
 <style>
-    .booking-error {
-        color: #7a0014;
+    .booking-shell {
+        max-width: 920px;
+        margin: 30px auto 50px;
+        padding: 0 20px;
+    }
+
+    .booking-steps {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        margin-bottom: 28px;
+        flex-wrap: wrap;
+        gap: 10px;
+    }
+
+    .step {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        color: #6b7280;
+        font-weight: 600;
+    }
+
+    .step.active,
+    .step.completed {
+        color: #1f2937;
+    }
+
+    .step-number {
+        width: 34px;
+        height: 34px;
+        border-radius: 999px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        background: #dbe7df;
+        color: #244636;
         font-weight: 700;
-        margin-bottom: 10px;
+        border: 2px solid #a9c3b5;
     }
-    .service-list {
-        width: fit-content;
-        margin: 8px auto 0;
-        color: #0d3a2a;
-        text-align: left;
+
+    .step.active .step-number,
+    .step.completed .step-number {
+        background: #244636;
+        color: #ffffff;
+        border-color: #244636;
     }
-    .selected-services-title {
-        color: #000000;
-        margin-bottom: 4px;
+
+    .step-line {
+        width: 60px;
+        height: 2px;
+        background: #cfd8d3;
     }
+
+    .step-line.active {
+        background: #244636;
+    }
+
+    .booking-card {
+        background: #fcfcfa;
+        border: 1px solid #d9e3dd;
+        border-radius: 18px;
+        padding: 32px 28px;
+        box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+    }
+
+    .booking-header {
+        text-align: center;
+        margin-bottom: 24px;
+    }
+
+    .booking-header h2 {
+        margin: 0 0 10px;
+        font-size: 2rem;
+        color: #1f2937;
+    }
+
+    .booking-header p {
+        margin: 0;
+        color: #5f6b66;
+    }
+
+    .booking-error {
+        margin-bottom: 18px;
+        padding: 14px 16px;
+        border-radius: 12px;
+        background: #fbeaea;
+        border: 1px solid #e6b8b8;
+        color: #8b1e1e;
+        font-weight: 700;
+        text-align: center;
+    }
+
+    .summary-grid {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 18px;
+        margin-bottom: 20px;
+    }
+
+    .summary-box,
     .services-box {
-        max-width: 560px;
-        margin: 0 auto 20px;
-        padding: 14px 18px;
-        border-radius: 10px;
-        background-color: #e6efe9;
-        border: 2px solid #8fb7a6;
+        background: #f7faf8;
+        border: 1px solid #dde8e1;
+        border-radius: 14px;
+        padding: 18px;
     }
-    .actions {
+
+    .summary-box h3,
+    .services-box h3 {
+        margin: 0 0 14px;
+        font-size: 1.1rem;
+        color: #1f2937;
+    }
+
+    .summary-row {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 10px 0;
+        border-bottom: 1px solid #e3ece7;
+        color: #33413b;
+    }
+
+    .summary-row:last-child {
+        border-bottom: none;
+    }
+
+    .summary-row.total-row {
+        font-size: 1.05rem;
+    }
+
+    .service-list {
+        list-style: none;
+        margin: 0;
+        padding: 0;
+    }
+
+    .service-list li {
+        display: flex;
+        justify-content: space-between;
+        gap: 16px;
+        padding: 12px 0;
+        border-bottom: 1px solid #e3ece7;
+        color: #1f2937;
+    }
+
+    .service-list li:last-child {
+        border-bottom: none;
+    }
+
+    .empty-service {
+        justify-content: flex-start;
+        color: #6b7280;
+        font-style: italic;
+    }
+
+    .form-actions {
+        margin-top: 24px;
         display: flex;
         justify-content: center;
+        gap: 14px;
+        flex-wrap: wrap;
+        align-items: center;
+    }
+
+    .secondary-button {
+        display: inline-block;
+        padding: 12px 22px;
+        border-radius: 999px;
+        border: 1px solid #b9cbbf;
+        background: #ffffff;
+        color: #244636;
+        text-decoration: none;
+        font-weight: 700;
+    }
+
+    .booking-button {
+        font-size: 16px;
+        font-weight: 600;
+        min-width: 180px;
+        padding: 12px 22px;
+        border-radius: 8px;
+        margin-left: 35px;
+        background-color: #333;
+        color: #fff;
+        transition: background-color 0.2s ease;
+    }
+    .booking-button:hover {
+        background-color: #555;
+    }
+    
+    @media (max-width: 700px) {
+        .summary-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .booking-card {
+            padding: 24px 18px;
+        }
+
+        .booking-header h2 {
+            font-size: 1.65rem;
+        }
+
+        .step-line {
+            width: 28px;
+        }
     }
 </style>
 {% endblock %}

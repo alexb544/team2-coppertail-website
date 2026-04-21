@@ -5,87 +5,51 @@
 <head>
 	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<link rel="stylesheet" href="{% static 'accounts/editor.css' %}" />
+	<script src="https://cdn.jsdelivr.net/npm/@tailwindcss/browser@4"></script>
 	<title>{% block title %}Coppertail Grooming{% endblock %}</title>
-	<style>
-		* {
-			margin: 0;
-			padding: 0;
-			box-sizing: border-box;
-		}
-		.container {
-            width: min(900px, calc(100% - 40px));
-            margin: 20px auto;
-        }
-
-		.nav-link-btn {
-			background: none;
-			border: none;
-			color: #007bff;
-			text-decoration: underline;
-			cursor: pointer;
-			font-family: inherit;
-			font-size: inherit;
-			padding: 0;
-		}
-.user-welcome {
-    font-weight: bold;
-    margin-right: 10px;
-}
-	</style>
 </head>
-<body>
+<body class="bg-white">
 	<header>
-		<div class = "centered-title">
-			<img src="{% static 'accounts/coppertail-grooming-logo.png' %}"
-			alt="Coppertail Grooming Log"
-			height="100"/>
-			<h1>Coppertail Grooming Co.</h1>
-		</div>
-		<hr>
-	<!-- servies link may break
-		<nav class = "navbar">
-			<ul>
-				<li> <a class = "header-link" id = "home" href = "http://127.0.0.1:8000/">Home</a> </li>
-				<li> <a class = "header-link" id = "services" href = "http://127.0.0.1:8000/services">Services</a> </li>
-				<li> <a class = "header-link" id = "appointment" href = "{% url 'booking:booking_create' %}">Book Now</a> </li>
-				<li> <a class = "header-link" id = "contact">Contact Us</a> </li>
-				<li> <a class = "header-link" id = "login-link" href = "http://127.0.0.1:8000/login/">Log In</a> </li>
-			</ul>
+		<nav class="flex justify-between items-center flex-wrap bg-green-200 py-2 sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
+			<div class="flex items-center flex-shrink-0 text-black m-2 px-5">
+				<a href="{% url 'accounts:accounts' %}">
+					<img class="h-20 pr-10" src="{% static 'accounts/coppertail-grooming-logo.png' %}" alt="Coppertail Grooming Logo"/>
+				</a>
+				<ul class="flex justify-around text-black font-bold sm:flex-wrap sm:pr-2 md:pr-6 lg:pr-10 xl:pr-14">
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="about" href="{% url 'accounts:about' %}">About Us</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="contact" href="{% url 'accounts:contact' %}">Contact Us</a> </li>
+					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="faq" href="{% url 'accounts:faq' %}">FAQ</a> </li>
+				</ul>
+			</div>
+			<div class="group">
+				<button class="flex items-center px-3 py-2 text-black hover:text-gray-600 hover:border-white">
+					<img class="h-7 md:h-10 lg:h-10 xl:h-12" src="{% static 'accounts/default_avatar.png' %}" alt="default profile" />
+				</button>
+				{% if user.is_authenticated %}
+				<div class="absolute w-25 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+					<div class="flex flex-col">
+						<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:account' %}">My Account</a>
+						<form class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" action="{% url 'accounts:logout' %}" method="post">{% csrf_token %}<button type="submit" class="nav-link-btn">Log Out</button></form>
+					</div>
+				</div>
+				{% else %}
+				<div class="absolute w-20 right-0 mr-5 md:mr-10 lg:mr-10 xl:mr-12 bg-white shadow-md rounded-md opacity-0 invisible group-hover:opacity-100 group-hover:visible">
+					<div class="flex flex-col">
+						<a class="flex justify-center mt-2 text-black hover:text-gray-600" href="{% url 'accounts:login' %}">Log In</a>
+						<a class="flex justify-center mt-4 mb-2 text-black hover:text-gray-600" href="{% url 'accounts:register' %}">Sign Up</a>
+						
+					</div>
+				</div>
+				{% endif %}
+			</div>
 		</nav>
-	-->
-		<!-- I had to get rid of the hard links because they were device specific and breaking on other devices i believe -->
-		<nav class="navbar">
-    	<ul>
-			<li> <a class="header-link" id="home" href="{% url 'accounts:accounts' %}">Home</a> </li>
-
-			<li> <a class="header-link" id="services" href="{% url 'accounts:services' %}">Services</a> </li>
-
-			<li> <a class="header-link" id="appointment" href="{% url 'booking:booking_create' %}">Book Now</a> </li>
-			<li> <a class="header-link" id="contact">Contact Us</a> </li>
-
-			{% if user.is_authenticated %}
-			{% if user.is_staff or user.is_superuser %}
-        <li><a class="header-link" href="{% url 'dashboard:dashboard' %}">Dashboard</a></li>
-    {% endif %}
-    <li><span class="user-welcome">Hello, {{ user.username }}!</span></li>
-    <li> <a class="header-link" id="account-page" href="{% url 'accounts:account' %}">My Account</a> </li>
-    <li>
-        <form action="{% url 'accounts:logout' %}" method="post" style="display:inline;">
-            {% csrf_token %}
-            <button type="submit" class="nav-link-btn">Log Out</button>
-        </form>
-    </li>
-{% else %}
-    <li><a href="{% url 'accounts:login' %}">Log In</a></li>
-    <li><a href="{% url 'accounts:register' %}">Sign Up</a></li>
-{% endif %}
-    	</ul>
-	</nav>
+		<hr class="color-green-800">
 	</header>
 
-	<div class = "container">
-		{% if messages %}
+	{% if messages %}
+		<div class = "w-5/6 m-15">
             {% for message in messages %}
                 <div style="
 					padding: 20px; 
@@ -98,10 +62,11 @@
 					">{{ message }}
                 </div>
             {% endfor %}
-        {% endif %}
-		{% block content %}
-		{% endblock %}
-	</div>
+		</div>
+	{% endif %}
+
+	{% block content %}
+	{% endblock %}
 
 	<footer></footer>
 </body>

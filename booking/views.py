@@ -1,5 +1,6 @@
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
+from django.http import JsonResponse
 from django.shortcuts import get_object_or_404, redirect, render
 
 from accounts.models import Dog
@@ -9,6 +10,7 @@ from .forms import BookingCreateForm
 from .models import Booking, BookingService, TimeSlot
 from .pricing import estimate_total
 from decimal import Decimal
+
 
 @login_required
 def booking_create(request):
@@ -33,6 +35,22 @@ def booking_create(request):
         form = BookingCreateForm(user=request.user)
 
     return render(request, "booking/booking_create.html", {"form": form})
+
+
+@login_required
+def booking_slots_json(request):
+    slots = TimeSlot.objects.filter(is_open=True).order_by("start_time")
+
+    events = []
+    for slot in slots:
+        events.append({
+            "id": str(slot.id),
+            "title": slot.start_time.strftime("%I:%M %p").lstrip("0"),
+            "start": slot.start_time.isoformat(),
+            "end": slot.end_time.isoformat(),
+        })
+
+    return JsonResponse(events, safe=False)
 
 
 @login_required

@@ -3,33 +3,24 @@
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<h2 class = "header1">Welcome to Coppertail Grooming!</h2>
-<div class = "info-card">
-	<div class = "info">
-		<p style="text-align: left;" class = "ad1">
-			Coppertail Grooming Co. is an elite all breed dog grooming boutique located in Lakeland, Florida.
-			<br><br>
-			Our goal is to treat your furry friend like our very own while offering a personalized, high-end
-			spa service!
-		</p>
-	</div>
-</div>
-<h2 class = "header1">Our Mission</h2>
-<div class = "info">
-	<p style="text-align: left;" class = "ad1">
+<h2 class = "font-semibold text-xl mx-15 pt-10">Welcome to Coppertail Grooming!</h2>
+<p class = "mx-15 ">
+	Coppertail Grooming Co. is an elite all breed dog grooming boutique located in Lakeland, Florida.
+	<br><br>
+	Our goal is to treat your furry friend like our very own while offering a personalized, high-end
+	spa service!
+	<br><br>
+</p>
+<div class = "bg-green-100">
+	<br>
+	<h2 class = "font-semibold text-xl mx-15 ">Our Mission</h2>
+	<p class = "mx-15 ">
 		We pride ourselves on giving our clients, and their fluffy companions, the best 
 		experience possible with every visit. We handle any-and-all of your dog's unique 
 		tastes and needs. From specialty shampoos to nail painting, we cover it all!
 		<br><br> 
-		Check out a full list of our services here: <a class = "ad2" href="http://127.0.0.1:8000/services/">Services</a>
+		Check out a full list of our services here: <a class = "underline text-blue-500 hover:text-orange-600" href="http://127.0.0.1:8000/services">Services</a>
+		<br><br>
 	</p>
 </div>
-
-<style>
-	.info-card {
-		margin: 25px 0;
-		background-color: #fafafa;
-		border-radius: 15px;
-	}
-</style>
 {% endblock %}

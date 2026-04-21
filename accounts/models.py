@@ -26,4 +26,4 @@ class Dog(models.Model):
     notes = models.TextField(blank=True)
 
     def __str__(self):
-        return f"{self.name} ({self.owner.user.username})"
+        return f"{self.name}"

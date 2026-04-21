@@ -67,5 +67,26 @@ class LoginForm(AuthenticationForm):
             'id': 'password',
         })
     )
+class ContactForm(forms.Form):
+    name = forms.CharField(
+        max_length=100, 
+        widget=forms.TextInput(attrs={
+            'placeholder': 'Your Name',
+            'class': 'form-control'
+        })
+    )
+    email = forms.EmailField(
+        widget=forms.EmailInput(attrs={
+            'placeholder': 'email@example.com',
+            'class': 'form-control'
+        })
+    )
+    message = forms.CharField(
+        widget=forms.Textarea(attrs={
+            'placeholder': 'Tell us about your dog...',
+            'class': 'form-control',
+            'rows': 4
+        })
+    )
 
     remember_me = forms.BooleanField(required=False)
