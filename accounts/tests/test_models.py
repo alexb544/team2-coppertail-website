@@ -242,5 +242,4 @@ class ProfileDogIntegrationTest(TestCase):
         # Verify profile and dogs are also deleted
         self.assertEqual(Profile.objects.filter(user_id=user1_id).count(), 0)
         self.assertEqual(Dog.objects.filter(owner_id=profile1_id).count(), 0)
-
->>>>>>> 55bf9920c744166e194f4937fd260e379b662eb5
+    
