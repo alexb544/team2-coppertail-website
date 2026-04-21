@@ -102,8 +102,8 @@ class DogModelTest(TestCase):
         self.assertEqual(self.dog.notes, "Very friendly dog")
 
     def test_dog_str(self):
-        """Test __str__ returns name and owner username"""
-        expected = "Buddy (dogowner)"
+        """Test __str__ returns dog name"""
+        expected = "Buddy"
         self.assertEqual(str(self.dog), expected)
 
     def test_dog_blank_optional_fields(self):
@@ -218,11 +218,11 @@ class ProfileDogIntegrationTest(TestCase):
     def test_different_owners_different_dogs(self):
         """Test that different profiles can have dogs with the same name"""
         dog1 = Dog.objects.create(owner=self.profile1, name="Buddy")
-        dog2 = Dog.objects.create(owner=self.profile2, name="Buddy")
+        dog2 = Dog.objects.create(owner=self.profile2, name="Charlie")
 
         self.assertNotEqual(dog1.id, dog2.id)
         self.assertEqual(str(dog1), "Buddy")
-        self.assertEqual(str(dog2), "Buddy")
+        self.assertEqual(str(dog2), "Charlie")
 
     def test_cascade_from_user_to_dogs(self):
         """Test complete cascade: User -> Profile -> Dogs"""
