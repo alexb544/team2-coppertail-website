@@ -1,0 +1,63 @@
+{% extends 'accounts/base.html' %}
+{% block title %}{{ form_title }} — Coppertail Grooming{% endblock %}
+
+{% block content %}
+<style>
+  .form-card {
+    max-width: 520px; margin: 0 auto;
+    background: #fafafa; border: 1px solid #e0e0e0;
+    border-radius: 8px; padding: 32px;
+  }
+  .form-card h2 { margin-bottom: 8px; font-size: 1.4rem; }
+  .booking-meta {
+    background: #f0f0f0; border-radius: 6px;
+    padding: 12px 16px; margin-bottom: 24px;
+    font-size: 0.9rem; color: #555; line-height: 1.8;
+  }
+  .booking-meta strong { color: #333; }
+  .form-group { margin-bottom: 18px; }
+  .form-group label { display: block; font-weight: 600; margin-bottom: 6px; color: #444; }
+  .form-input {
+    width: 100%; padding: 9px 12px; border: 1px solid #ccc;
+    border-radius: 4px; font-size: 0.95rem; font-family: inherit;
+  }
+  .form-input:focus { outline: none; border-color: #007bff; }
+  .form-actions { display: flex; gap: 10px; margin-top: 24px; }
+  .btn { padding: 9px 20px; border-radius: 4px; border: none; cursor: pointer;
+         font-size: 0.95rem; font-family: inherit; text-decoration: none; display: inline-block; }
+  .btn-primary { background: #007bff; color: white; }
+  .btn-primary:hover { background: #0056b3; }
+  .btn-secondary { background: #eee; color: #333; }
+  .btn-secondary:hover { background: #ddd; }
+  .errorlist { color: #d9534f; font-size: 0.85rem; margin-top: 4px; padding-left: 0; list-style: none; }
+</style>
+
+<div class="form-card">
+  <h2>{{ form_title }}</h2>
+
+  <!-- Read-only booking info -->
+  <div class="booking-meta">
+    <strong>Customer:</strong> {{ booking.user.username }}<br>
+    <strong>Dog:</strong> {{ booking.dog }}<br>
+    <strong>Slot:</strong> {{ booking.slot.start_time|date:"M d, Y g:i A" }} — {{ booking.slot.end_time|date:"g:i A" }}<br>
+    <strong>Created:</strong> {{ booking.created_at|date:"M d, Y g:i A" }}
+  </div>
+
+  <form method="post">
+    {% csrf_token %}
+    {% for field in form %}
+    <div class="form-group">
+      {{ field.label_tag }}
+      {{ field }}
+      {% if field.errors %}
+        <ul class="errorlist">{% for e in field.errors %}<li>{{ e }}</li>{% endfor %}</ul>
+      {% endif %}
+    </div>
+    {% endfor %}
+    <div class="form-actions">
+      <button type="submit" class="btn btn-primary">{{ submit_label }}</button>
+      <a href="{% url 'dashboard:dashboard' %}" class="btn btn-secondary">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

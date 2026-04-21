@@ -1,10 +1,11 @@
-from django.test import TestCase
+from django.test import TestCase, Client
 from django.contrib.auth import get_user_model
 from accounts.models import Profile, Dog
 
 User = get_user_model()
 
 class ProfileModelTest(TestCase):
+
     def setUp(self):
         self.user = User.objects.create_user(
             username="testuser",
@@ -73,6 +74,7 @@ class ProfileModelTest(TestCase):
         self.assertEqual(self.profile.address, "a" * 80)
 
 class DogModelTest(TestCase):
+    
     def setUp(self):
         # Create a user and profile
         self.user = User.objects.create_user(
@@ -138,7 +140,8 @@ class DogModelTest(TestCase):
         Dog.objects.create(owner=self.profile, name="Daisy")
 
         dogs = self.profile.dogs.all()
-        self.assertEqual(dogs.count(), 3)  # Including Buddy from setUp
+        #Includes Buddy from setUp
+        self.assertEqual(dogs.count(), 3)
         dog_names = [dog.name for dog in dogs]
         self.assertIn("Buddy", dog_names)
         self.assertIn("Charlie", dog_names)
@@ -215,11 +218,11 @@ class ProfileDogIntegrationTest(TestCase):
     def test_different_owners_different_dogs(self):
         """Test that different profiles can have dogs with the same name"""
         dog1 = Dog.objects.create(owner=self.profile1, name="Buddy")
-        dog2 = Dog.objects.create(owner=self.profile2, name="Charlie")
+        dog2 = Dog.objects.create(owner=self.profile2, name="Buddy")
 
         self.assertNotEqual(dog1.id, dog2.id)
         self.assertEqual(str(dog1), "Buddy (owner1)")
-        self.assertEqual(str(dog2), "Charlie (owner2)")
+        self.assertEqual(str(dog2), "Buddy (owner2)")
 
     def test_cascade_from_user_to_dogs(self):
         """Test complete cascade: User -> Profile -> Dogs"""
@@ -239,4 +242,4 @@ class ProfileDogIntegrationTest(TestCase):
         # Verify profile and dogs are also deleted
         self.assertEqual(Profile.objects.filter(user_id=user1_id).count(), 0)
         self.assertEqual(Dog.objects.filter(owner_id=profile1_id).count(), 0)
-
+    

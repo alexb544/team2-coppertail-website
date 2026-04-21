@@ -1,0 +1,510 @@
+{% extends 'accounts/base.html' %}
+{% block title %}Admin Dashboard — Coppertail Grooming{% endblock %}
+
+{% block content %}
+<style>
+  .dashboard-shell {
+		width: 100%;
+		margin: 0;
+		padding: 0;
+  }
+  .dashboard-card {
+		width: 100%;
+		background: #fcfcfa;
+		border: 1px solid #d9e3dd;
+		border-radius: 18px;
+		padding: 32px 28px;
+		box-shadow: 0 12px 28px rgba(0, 0, 0, 0.06);
+  }
+
+  .dash-section { 
+		background: #f7faf8;
+		border: 1px solid #dde8e1;
+		border-radius: 14px;
+		padding: 18px; 
+		margin-bottom: 25px;
+  }
+  .dash-section-header {
+    display: flex;
+    margin-bottom: 10px;
+    padding-bottom: 8px;
+  }
+  .dash-section-header h2 { 
+    font-size: 1.3rem; color: #333; 
+  }
+
+  .dash-table { 
+    width: 100%; 
+		table-layout: auto;
+		border-color: #F8C8DC;
+		border-width: 2px;
+		border-radius: 18px;
+		border-collapse: collapse; 
+		font-size: 1rem; 
+  }
+  .dash-table th {
+    text-align: left;
+    padding: 10px 12px;
+    background: #f5f5f5;
+    border-bottom: 1px solid #ddd;
+    color: #555;
+    font-weight: 600;
+		border-right: 1px solid #e5e5e5;
+  }
+  .dash-table td {
+    padding: 7px 12px;
+    border-bottom: 1px solid #ddd;
+    color: #555;
+    font-weight: 600;
+		border-right: 1px solid #f1e4e4;
+		white-space: nowrap;
+  }
+  tr:nth-child(even) {
+    background-color: #F8C8DC;
+  }
+	tr:hover {
+		background-color: #f8c8dc75 ;
+	}
+  .dash-actions { 
+    display: flex; 
+    gap: 8px; 
+    flex-wrap: wrap; 
+    justify-content: flex-end; 
+  }
+  .btn { 
+    padding: 7px 14px; 
+    border-radius: 4px; 
+    border: none; 
+    cursor: pointer;
+    font-size: 0.85rem; 
+    font-family: inherit; 
+    text-decoration: none;
+    display: inline-block; 
+  }
+  .btn-primary { 
+    background: #007bff; color: white; 
+  }
+  .btn-primary:hover { 
+    background: #0e67c7; 
+  }
+  .btn-warning { 
+    background: #f0ad4e; color: white; 
+  }
+  .btn-warning:hover { 
+    background: #d58512; 
+  }
+  .btn-danger { 
+    background: #d9534f; 
+    color: white; 
+  }
+  .btn-danger:hover { 
+    background: #c9302c; 
+  }
+  .btn-success { 
+    background: #5cb85c; 
+    color: white; 
+  }
+  .btn-success:hover { 
+    background: #449d44; 
+  }
+  .btn-secondary { 
+    background: #aaa; 
+    color: white; 
+  }
+  .badge {
+    padding: 3px 8px; 
+    border-radius: 12px; 
+		border-width: 2px;
+    font-size: 0.78rem;
+    font-weight: 600; 
+    display: inline-block;
+  }
+  .badge-open { 
+    background: #dff0d8; 
+    color: #3c763d; 
+  }
+  .badge-closed { 
+    background: #f2dede; 
+    color: #a94442; 
+  }
+  .badge-pending { 
+    background: #fcf8e3; 
+    color: #8a6d3b; 
+  }
+  .badge-confirmed { 
+    background: #dff0d8; 
+    color: #3c763d; 
+  }
+  .badge-cancelled { 
+    background: #f2dede; 
+    color: #a94442; 
+  }
+  .dash-welcome { 
+    margin-bottom: 24px; 
+  }
+  .dash-welcome h1 { 
+    margin: 0px 0 10px;
+    font-size: 2rem;
+    color: #1f2937;
+    font-weight: 700;
+  }
+
+  .filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    align-items: flex-end;
+    background: #f9f9f9;
+    border: 1px solid #e5e5e5;
+    border-radius: 6px;
+    padding: 12px 14px;
+    margin-bottom: 5px;
+  }
+  .filter-group { 
+    display: flex; 
+    flex-direction: column; 
+    gap: 4px; 
+  }
+  .filter-group label { 
+    font-size: 0.78rem; 
+    font-weight: 600; 
+    color: #666; 
+  }
+  .filter-input {
+    padding: 5px 9px; 
+    border: 1px solid #ccc; 
+    border-radius: 4px;
+    font-size: 0.85rem; 
+    font-family: inherit; 
+    width: 140px;
+  }
+	.filter-status-confirmed {
+		background: green;
+	}
+  .filter-input:focus { outline: none; 
+    border-color: #007bff; 
+  }
+  .btn-filter { 
+    padding: 6px 16px; 
+    background: #555; 
+    color: white;
+    border: none; 
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 0.85rem; 
+    font-family: inherit; 
+    align-self: flex-end; 
+  }
+  .btn-filter:hover { 
+    background: #333; 
+  }
+  .btn-clear { 
+    padding: 6px 12px; 
+    background: none; 
+    color: #888;
+    border: 1px solid #ccc; 
+    border-radius: 4px; 
+    cursor: pointer;
+    font-size: 0.85rem; 
+    font-family: inherit;
+    text-decoration: none; 
+    align-self: flex-end; 
+  }
+  .btn-clear:hover { 
+    color: #333; 
+    border-color: #999; 
+  }
+
+  /* Sortable column headers */
+  .sortable { 
+    cursor: pointer; 
+    user-select: none; 
+    white-space: nowrap; 
+  }
+  .sortable:hover { 
+    color: #007bff; 
+  }
+  .sort-arrow { 
+    margin-left: 4px; 
+    font-size: 0.7rem; 
+    color: #007bff; 
+  }
+</style>
+
+<div class="dashboard-shell">
+	<div class="dashboard-card">
+		<div class="dash-welcome">
+  		<h1>Admin Dashboard</h1>
+		</div>
+		
+		<!-- ═══════════════ SERVICES ═══════════════ -->
+		<div class="dash-section">
+			<div class="dash-section-header">
+				<h2><b>Services</b></h2>
+			</div>
+
+			<form method="get" class="filter-bar">
+				<!-- preserve other sections' filters -->
+				{% if slot_status %}
+					<input type="hidden" name="slot_status" value="{{ slot_status }}">
+				{% endif %}
+				{% if slot_sort != 'start_time' %}
+					<input type="hidden" name="slot_sort" value="{{ slot_sort }}">
+				{% endif %}
+				{% if booking_customer %}
+					<input type="hidden" name="booking_customer" value="{{ booking_customer }}">
+				{% endif %}
+				{% if booking_status %}
+					<input type="hidden" name="booking_status" value="{{ booking_status }}">
+				{% endif %}
+				{% if booking_sort != '-created_at' %}
+					<input type="hidden" name="booking_sort" value="{{ booking_sort }}">
+				{% endif %}
+
+				<div class="filter-group">
+					<label>Min Price</label>
+					<input 
+						type="number",
+						name="service_price_min",
+						class="filter-input",
+						step="5.00",
+						min="0",
+						value="{{ service_price_min }}",
+						placeholder="Min">
+				</div>
+				<div class="filter-group">
+					<label>Max Price</label>
+					<input 
+						type="number" 
+						name="service_price_max" 
+						class="filter-input" 
+						step="5.00" 
+						min="0"
+						value="{{ service_price_max }}" 
+						placeholder="Max">
+				</div>
+				<div class="filter-group">
+					<label>Sort By</label>
+					<select name="service_sort" class="filter-input">
+						<option value="service_name"  {% if service_sort == 'service_name' %}selected{% endif %}>A→Z</option>
+						<option value="-service_name" {% if service_sort == '-service_name' %}selected{% endif %}>Z→A</option>
+						<option value="base_price"    {% if service_sort == 'base_price' %}selected{% endif %}>Price Low→High</option>
+						<option value="-base_price"   {% if service_sort == '-base_price' %}selected{% endif %}>Price High→Low</option>
+					</select>
+				</div>
+				<button type="submit" class="btn-filter">Apply</button>
+				<a href="{% url 'dashboard:dashboard' %}" class="btn-clear">Clear</a>
+				<a href="{% url 'dashboard:add_service' %}" class="btn btn-primary"><b>+ Add Service</b></a>
+			</form>
+
+			{% if services %}
+			<table class="dash-table">
+				<thead>
+					<tr>
+						<th><b>Name</b></th>
+						<th><b>Pricing</b></th>
+						<th><b>Description</b></th>
+						<th style="text-align:right;"><b>Actions</b></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for service in services %}
+					<tr>
+						<td>{{ service.service_name }}</td>
+						<td>${{ service.base_price }}</td>
+						<td>{{ service.description|truncatewords:12 }}</td>
+						<td style="text-align:right;">
+							<div class="dash-actions">
+								<a href="{% url 'dashboard:edit_service' service.pk %}" class="btn btn-warning">Edit</a>
+								<form method="post" action="{% url 'dashboard:delete_service' service.pk %}"
+											onsubmit="return confirm('Delete {{ service.service_name }}?')">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-danger">Delete</button>
+								</form>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+				<p style="color:#888;">No services match your filters.</p>
+			{% endif %}
+		</div>
+
+
+		<!-- ═══════════════ TIME SLOTS ═══════════════ -->
+		<div class="dash-section">
+			<div class="dash-section-header">
+				<h2><b>Appointment Times</b></h2>
+			</div>
+
+			<form method="get" class="filter-bar">
+				{% if service_price_min %}<input type="hidden" name="service_price_min" value="{{ service_price_min }}">{% endif %}
+				{% if service_price_max %}<input type="hidden" name="service_price_max" value="{{ service_price_max }}">{% endif %}
+				{% if service_sort != 'service_name' %}<input type="hidden" name="service_sort" value="{{ service_sort }}">{% endif %}
+				{% if booking_customer %}<input type="hidden" name="booking_customer" value="{{ booking_customer }}">{% endif %}
+				{% if booking_status %}<input type="hidden" name="booking_status" value="{{ booking_status }}">{% endif %}
+				{% if booking_sort != '-created_at' %}<input type="hidden" name="booking_sort" value="{{ booking_sort }}">{% endif %}
+
+				<div class="filter-group">
+					<label>Status</label>
+					<select name="slot_status" class="filter-input">
+						<option value=""       {% if slot_status == '' %}selected{% endif %}>All</option>
+						<option value="open"   {% if slot_status == 'open' %}selected{% endif %}>Open</option>
+						<option value="closed" {% if slot_status == 'closed' %}selected{% endif %}>Closed</option>
+					</select>
+				</div>
+				<div class="filter-group">
+					<label>Sort By</label>
+					<select name="slot_sort" class="filter-input">
+						<option value="start_time"  {% if slot_sort == 'start_time' %}selected{% endif %}>Ascending</option>
+						<option value="-start_time" {% if slot_sort == '-start_time' %}selected{% endif %}>Descending</option>
+					</select>
+				</div>
+				<button type="submit" class="btn-filter">Apply</button>
+				<a href="{% url 'dashboard:dashboard' %}" class="btn-clear">Clear</a>
+				<a href="{% url 'dashboard:add_timeslot' %}" class="btn btn-primary"><b>+ Add Slot</b></a>
+			</form>
+
+			{% if timeslots %}
+			<table class="dash-table">
+				<thead>
+					<tr>
+						<th><b>Date</b></th>
+						<th><b>Arival Time</b></th>
+						<th><b>Pickup Time</b></th>
+						<th><b>Status</b></th>
+						<th style="text-align:right;"><b>Actions</b></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for slot in timeslots %}
+					<tr>
+						<td>{{ slot.start_time|date:"M d, Y" }}</td>
+						<td>{{ slot.start_time|date:"g:i A" }}</td>
+						<td>{{ slot.end_time|date:"g:i A" }}</td>
+						<td>
+							{% if slot.is_open %}
+								<span class="badge badge-open">Open</span>
+							{% else %}
+								<span class="badge badge-closed">Closed</span>
+							{% endif %}
+						</td>
+						<td style="text-align:right;">
+							<div class="dash-actions">
+								<form method="post" action="{% url 'dashboard:toggle_timeslot' slot.pk %}">
+									{% csrf_token %}
+									<button type="submit" class="btn {% if slot.is_open %}btn-secondary{% else %}btn-success{% endif %}">
+										{% if slot.is_open %}Close{% else %}Open{% endif %}
+									</button>
+								</form>
+								<a href="{% url 'dashboard:edit_timeslot' slot.pk %}" class="btn btn-warning">Edit</a>
+								<form method="post" action="{% url 'dashboard:delete_timeslot' slot.pk %}"
+											onsubmit="return confirm('Delete this time slot?')">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-danger">Delete</button>
+								</form>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+				<p style="color:#888;">No time slots match your filters.</p>
+			{% endif %}
+		</div>
+
+
+		<!-- ═══════════════ BOOKINGS ═══════════════ -->
+		<div class="dash-section">
+			<div class="dash-section-header">
+				<h2><b>Bookings</b></h2>
+			</div>
+
+			<form method="get" class="filter-bar">
+				{% if service_price_min %} <input type="hidden" name="service_price_min" value="{{ service_price_min }}"> {% endif %}
+				{% if service_price_max %} <input type="hidden" name="service_price_max" value="{{ service_price_max }}"> {% endif %}
+				{% if service_sort != 'service_name' %} <input type="hidden" name="service_sort" value="{{ service_sort }}"> {% endif %}
+				{% if slot_status %} <input type="hidden" name="slot_status" value="{{ slot_status }}"> {% endif %}
+				{% if slot_sort != 'start_time' %} <input type="hidden" name="slot_sort" value="{{ slot_sort }}"> {% endif %}
+
+				<div class="filter-group">
+					<label>Customer Name</label>
+					<input type="text" name="booking_customer" class="filter-input" value="{{ booking_customer }}" placeholder="Search...">
+				</div>
+				<div class="filter-group">
+					<label>Status</label>
+					<select name="booking_status" class="filter-input">
+						<option value=""          {% if booking_status == '' %}selected{% endif %}>All</option>
+						<option value="CONFIRMED" {% if booking_status == 'CONFIRMED' %}selected{% endif %}>Confirmed</option>
+						<option value="PENDING"   {% if booking_status == 'PENDING' %}selected{% endif %}>Pending</option>
+						<option value="CANCELLED" {% if booking_status == 'CANCELLED' %}selected{% endif %}>Cancelled</option>
+					</select>
+				</div>
+				<div class="filter-group">
+					<label>Sort By</label>
+					<select name="booking_sort" class="filter-input" default="Oldest">
+						<option value="created_at"       {% if booking_sort == 'created_at' %}selected{% endif %}>Oldest</option>
+						<option value="-created_at"      {% if booking_sort == '-created_at' %}selected{% endif %}>Newest</option>
+						<option value="user__username"   {% if booking_sort == 'user__username' %}selected{% endif %}>A→Z</option>
+						<option value="-user__username"  {% if booking_sort == '-user__username' %}selected{% endif %}>Z→A</option>
+						<option value="total"            {% if booking_sort == 'total' %}selected{% endif %}>Total Ascending</option>
+						<option value="-total"           {% if booking_sort == '-total' %}selected{% endif %}>Total Descending</option>
+					</select>
+				</div>
+				<button type="submit" class="btn-filter">Apply</button>
+				<a href="{% url 'dashboard:dashboard' %}" class="btn-clear">Clear</a>
+			</form>
+
+			{% if recent_bookings %}
+			<table class="dash-table">
+				<thead>
+					<tr>
+						<th><b>ID</b></th>
+						<th><b>Customer</b></th>
+						<th><b>Dog</b></th>
+						<th><b>Date / Time</b></th>
+						<th><b>Total</b></th>
+						<th><b>Status</b></th>
+						<th><b>Notes</b></th>
+						<th style="text-align:right;"><b>Actions</b></th>
+					</tr>
+				</thead>
+				<tbody>
+					{% for booking in recent_bookings %}
+					<tr>
+						<td>{{ booking.pk }}</td>
+						<td>{{ booking.user.first_name }} {{ booking.user.last_name}}</td>
+						<td>{{ booking.dog }}</td>
+						<td>{{ booking.slot.start_time|date:"F d, g:i a" }}</td>
+						<td>${{ booking.total }}</td>
+						<td>
+							{% if booking.status == "CONFIRMED" %} <span class="badge badge-confirmed">confirmed</span>
+							{% elif booking.status == "PENDING" %} <span class="badge badge-pending">pending</span>
+							{% elif booking.status == "CANCELLED" %} <span class="badge badge-cancelled">cancelled</span>
+							{% else %} <span class="badge badge-closed">hiee</span> {% endif %}
+						</td>
+						<td>{{ booking.notes|truncatewords:18 }}</td>
+						<td style="text-align:right;">
+							<div class="dash-actions">
+								<a href="{% url 'dashboard:edit_booking' booking.pk %}" class="btn btn-warning">Edit</a>
+								<form method="post" action="{% url 'dashboard:delete_booking' booking.pk %}"
+											onsubmit="return confirm('Delete booking #{{ booking.pk }}? This cannot be undone.')">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-danger">Delete</button>
+								</form>
+							</div>
+						</td>
+					</tr>
+					{% endfor %}
+				</tbody>
+			</table>
+			{% else %}
+				<p style="color:#888;">No bookings match your filters.</p>
+			{% endif %}
+		</div>
+		{% endblock %}
+	</div>
+</div>

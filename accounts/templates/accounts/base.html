@@ -21,6 +21,9 @@
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="about" href="{% url 'accounts:about' %}">About Us</a> </li>
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="contact" href="{% url 'accounts:contact' %}">Contact Us</a> </li>
 					<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="faq" href="{% url 'accounts:faq' %}">FAQ</a> </li>
+					{% if user.is_staff or user.is_superuser %}
+						<li class="xs:px-2 sm:px-3 md:px-3 lg:px-5 xl:px-7"> <a class="hover:text-orange-600" id="admin" href="{% url 'dashboard:dashboard' %}">Admin</a> </li>
+    				{% endif %}
 				</ul>
 			</div>
 			<div class="group">
