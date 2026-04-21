@@ -40,7 +40,7 @@ def dashboard(request):
     bookings = Booking.objects.select_related('user', 'dog', 'slot')
     booking_customer = request.GET.get('booking_customer', '').strip()
     booking_status = request.GET.get('booking_status', '')
-    booking_sort = request.GET.get('booking_sort', '-created_at')
+    booking_sort = request.GET.get('booking_sort', 'created_at')
     if booking_customer:
         bookings = bookings.filter(user__username__icontains=booking_customer)
     if booking_status:
@@ -86,7 +86,7 @@ def edit_service(request, pk):
         return redirect('dashboard:dashboard')
     return render(request, 'dashboard/service_form.html', {
         'form': form,
-        'form_title': f'Edit — {service.service_name}',
+        'form_title': f'Edit - {service.service_name}',
         'submit_label': 'Save Changes',
     })
 

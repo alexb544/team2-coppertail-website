@@ -13,8 +13,8 @@ class ServiceForm(forms.ModelForm):
             }),
             'base_price': forms.NumberInput(attrs={
                 'class': 'form-input',
-                'placeholder': '0.00',
-                'step': '0.01'
+                'placeholder': '$0.00',
+                'step': '1.00'
             }),
             'description': forms.Textarea(attrs={
                 'class': 'form-input',
