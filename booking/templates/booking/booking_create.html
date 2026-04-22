@@ -86,17 +86,22 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedEventId = slot.value || null;
     let selectedDateStr = null;
 
-    function sameDay(date1, date2) {
-        return date1.getFullYear() === date2.getFullYear() &&
-               date1.getMonth() === date2.getMonth() &&
-               date1.getDate() === date2.getDate();
-    }
-
     function formatLocalDateString(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    function parseDateString(dateStr) {
+        return new Date(`${dateStr}T12:00:00`);
+    }
+
+    function getEventDateString(event) {
+        if (event.startStr) {
+            return event.startStr.slice(0, 10);
+        }
+        return event.start ? formatLocalDateString(event.start) : null;
     }
 
     function formatDateHeading(date) {
@@ -117,11 +122,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const dateSet = new Set();
 
         calendar.getEvents().forEach(event => {
-            if (event.start) {
-                dateSet.add(formatLocalDateString(event.start));
+            const eventDateStr = getEventDateString(event);
+            if (eventDateStr) {
+                dateSet.add(eventDateStr);
             }
         });
-
         return dateSet;
     }
 
@@ -151,12 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function renderSlotsForDate(clickedDate, calendar) {
-        selectedDateStr = formatLocalDateString(clickedDate);
+    function renderSlotsForDate(dateStr, calendar) {
+        const clickedDate = parseDateString(dateStr);
+
+        selectedDateStr = dateStr;
         updateSelectedDayHighlight();
 
         const allEvents = calendar.getEvents();
-        const matchingEvents = allEvents.filter(event => event.start && sameDay(event.start, clickedDate));
+        const matchingEvents = allEvents.filter(event => getEventDateString(event) === dateStr);
 
         selectedDate.innerHTML = "Times available for " + formatDateHeading(clickedDate);
         selectedDate.classList.remove('empty');
@@ -176,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <button type="button"
                         class="time-slot-button${isSelected}"
                         data-event-id="${event.id}">
-                    ${formatTimeOnly(event.start)}
+                    ${event.title || formatTimeOnly(event.start)}
                 </button>
             `;
         }).join('');
@@ -199,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 event.setProp('backgroundColor', '#46243f');
                 event.setProp('borderColor', '#46243f');
 
-                renderSlotsForDate(event.start, calendar);
+                renderSlotsForDate(getEventDateString(event), calendar);
             });
         });
     }
@@ -222,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         dateClick: function(info) {
-            renderSlotsForDate(info.date, calendar);
+            renderSlotsForDate(info.dateStr, calendar);
         },
 
         eventClick: function(info) {
@@ -239,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
             event.setProp('backgroundColor', '#46243f');
             event.setProp('borderColor', '#46243f');
 
-            renderSlotsForDate(event.start, calendar);
+            renderSlotsForDate(getEventDateString(event), calendar);
         },
 
         eventDidMount: function(info) {
@@ -265,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (selectedEventId) {
                 const savedEvent = calendar.getEventById(selectedEventId);
                 if (savedEvent && savedEvent.start) {
-                    renderSlotsForDate(savedEvent.start, calendar);
+                    renderSlotsForDate(getEventDateString(savedEvent), calendar);
                 }
             }
         }
