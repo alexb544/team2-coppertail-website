@@ -22,6 +22,7 @@ class Dog(models.Model):
     name = models.CharField(max_length=80)
     breed = models.CharField(max_length=80, blank=True)
     age = models.PositiveIntegerField(null=True, blank=True)
+    image = models.ImageField(upload_to='dog_images', blank=True, null=True)
     size = models.CharField(max_length=10, choices=Size.choices, default=Size.MEDIUM)
     notes = models.TextField(blank=True)
 

@@ -103,7 +103,7 @@ def add_dog(request):
     profile, created = Profile.objects.get_or_create(user=request.user)
     
     if request.method == "POST":
-        form = DogForm(request.POST)
+        form = DogForm(request.POST, request.FILES)
         if form.is_valid():
             dog = form.save(commit=False)
             dog.owner = profile
@@ -121,7 +121,7 @@ def edit_dog(request, dog_id):
     dog = get_object_or_404(Dog, id=dog_id, owner=profile)
     
     if request.method == "POST":
-        form = DogForm(request.POST, instance=dog)
+        form = DogForm(request.POST, request.FILES, instance=dog)
     
         if form.is_valid():
             form.save()
