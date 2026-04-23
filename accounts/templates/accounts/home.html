@@ -1,26 +1,67 @@
 {% extends 'accounts/base.html' %}
+{% load static %}
 
 {% block title %}{{ page_title }}{% endblock %}
 
 {% block content %}
-<h2 class = "font-semibold text-xl mx-15 pt-10">Welcome to Coppertail Grooming!</h2>
-<p class = "mx-15 ">
-	Coppertail Grooming Co. is an elite all breed dog grooming boutique located in Lakeland, Florida.
-	<br><br>
-	Our goal is to treat your furry friend like our very own while offering a personalized, high-end
-	spa service!
-	<br><br>
-</p>
-<div class = "bg-green-100">
-	<br>
-	<h2 class = "font-semibold text-xl mx-15 ">Our Mission</h2>
-	<p class = "mx-15 ">
-		We pride ourselves on giving our clients, and their fluffy companions, the best 
-		experience possible with every visit. We handle any-and-all of your dog's unique 
-		tastes and needs. From specialty shampoos to nail painting, we cover it all!
-		<br><br> 
-		Check out a full list of our services here: <a class = "underline text-blue-500 hover:text-orange-600" href="http://127.0.0.1:8000/services">Services</a>
-		<br><br>
-	</p>
+<div class="relative flex items-center justify-center bg-no-repeat bg-fixed bg-cover bg-bottom bg-clip-padding h-40 sm:h-60 md:h-100 lg:h-120" style="background-image: url('{% static 'accounts/dog_in_store.png' %}');">
+	<div class="absolute inset-0 bg-black/20"></div>
+	<div class="relative px-6 text-center text-white">
+		<h2 class="font-bold text-2xl drop-shadow-[0_3px_10px_rgba(0,0,0,0.85)] sm:text-3xl md:text-5xl">
+			Welcome to Coppertail Grooming!
+		</h2>
+		<p class="mt-4 text-sm font-medium drop-shadow-[0_3px_10px_rgba(0,0,0,0.85)] sm:text-base md:text-xl">
+			An elite, all breeds dog grooming boutique located in Lakeland, Florida.
+		</p>
+	</div>
+</div>
+<br>
+<div>
+	<div class="mx-auto max-w-[90rem] px-4 text-left sm:px-5">
+		<h3 class="text-lg font-bold text-[#8f3b61]">Maintaining a hygiene routine is crucial for you, and it’s equally important for the health of your dog.</h3><br>
+		<p>
+			At Coppertail, we provide quick and affordable services, including bathing, ear cleaning, nail trimming, and teeth brushing 
+			— the essentials for a clean and healthy dog. Add additional services as needed — like blow-drying, haircuts, or other treatments 
+			— and make it a monthly routine for your dog’s wellness.
+		</p><br>
+		<p class="font-semibold">Check out a full list of our services here:</b> <a class="text-[#8f3b61] hover:text-orange-600" href="{% url 'accounts:services' %}">Services</a></p><br>	
+	</div>
+</div>
+<div class="bg-[#f8c8dc75]">
+	<div class="mx-auto max-w-[90rem] px-4 py-10 text-left sm:px-5">
+		<h2 class="font-semibold text-xl">Location</h2>
+		<div class="mt-4 grid gap-8 lg:grid-cols-[minmax(0,1.3fr)_minmax(260px,360px)] lg:items-start">
+			<div class="rounded-2xl border border-[#ddb0c2] bg-white/85 p-6 shadow-[0_14px_32px_rgba(111,47,71,0.1)] backdrop-blur-sm">
+				<p class="text-lg font-bold uppercase tracking-[0.18em] text-[#8f3b61]">Address</p>
+				<p class="mt-2 text-sm leading-6 text-[#6b5a62]">
+					We’re located at
+					<a class="underline text-blue-500 hover:text-orange-600" href="https://maps.app.goo.gl/PTFWTVKFvyN7vYuK6">119 Allamanda Dr, Lakeland, FL 33803</a>.
+				</p>
+				<div class="mt-6">
+					<iframe class="h-[300px] w-full rounded-xl border border-[#e7b8cb] bg-white shadow-sm" src="https://www.google.com/maps/embed?pb=!1m14!1m8!1m3!1d1761.1604782837624!2d-81.9570696!3d28.0146645!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x88dd3f3f3866dec9%3A0x223bfc4e711e9cee!2sCopper%20Tail%20Grooming%20Co.!5e0!3m2!1sen!2sus!4v1776350026534!5m2!1sen!2sus" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade"></iframe>
+				</div>
+			</div>
+			<div class="rounded-2xl border border-[#ddb0c2] bg-white/85 p-6 shadow-[0_14px_32px_rgba(111,47,71,0.1)] backdrop-blur-sm">
+				<p class="text-lg font-bold uppercase tracking-[0.18em] text-[#8f3b61]">Business Hours</p>
+				<p class="mt-2 text-sm leading-6 text-[#6b5a62]">
+					Stop by during any of our buisness hours for grooming appointments and check-ins.
+				</p>
+				<div class="mt-6 space-y-3">
+					<div class="flex items-center justify-between rounded-xl bg-[#f8c8dc75] px-4 py-3">
+						<span class="font-semibold text-[#432632]">Monday - Tuesday</span>
+						<span class="font-semibold text-[#8f3b61]">8:00 AM - 4:30 PM</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl bg-[#f8c8dc75] px-4 py-3">
+						<span class="font-semibold text-[#432632]">Wednesday - Friday</span>
+						<span class="font-semibold text-[#8f3b61]">7:30 AM - 5:00 PM</span>
+					</div>
+					<div class="flex items-center justify-between rounded-xl bg-[#f8c8dc75] px-4 py-3">
+						<span class="font-semibold text-[#432632]">Saturday - Sunday</span>
+						<span class="font-semibold text-[#8f3b61]">Closed</span>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
 </div>
 {% endblock %}

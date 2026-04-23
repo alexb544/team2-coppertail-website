@@ -1,3 +1,4 @@
+from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.db import transaction
 from django.http import JsonResponse
@@ -118,3 +119,34 @@ def booking_confirm(request):
 def booking_success(request, booking_id):
     booking = get_object_or_404(Booking, id=booking_id, user=request.user)
     return render(request, "booking/booking_success.html", {"booking": booking})
+
+
+@login_required
+def booking_cancel(request, booking_id):
+    if request.method != "POST":
+        return redirect("accounts:account")
+
+    booking = get_object_or_404(Booking, id=booking_id, user=request.user)
+
+    if booking.status != Booking.Status.CONFIRMED:
+        messages.error(request, "Only confirmed appointments can be cancelled.")
+        return redirect("accounts:account")
+
+    with transaction.atomic():
+        booking = Booking.objects.select_for_update().select_related("slot").get(
+            id=booking.id,
+            user=request.user,
+        )
+
+        if booking.status != Booking.Status.CONFIRMED:
+            messages.error(request, "This appointment can no longer be cancelled.")
+            return redirect("accounts:account")
+
+        booking.status = Booking.Status.CANCELLED
+        booking.save(update_fields=["status"])
+
+        booking.slot.is_open = True
+        booking.slot.save(update_fields=["is_open"])
+
+    messages.success(request, "Your appointment was cancelled.")
+    return redirect("accounts:account")

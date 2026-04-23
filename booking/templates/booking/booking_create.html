@@ -86,17 +86,22 @@ document.addEventListener('DOMContentLoaded', function () {
     let selectedEventId = slot.value || null;
     let selectedDateStr = null;
 
-    function sameDay(date1, date2) {
-        return date1.getFullYear() === date2.getFullYear() &&
-               date1.getMonth() === date2.getMonth() &&
-               date1.getDate() === date2.getDate();
-    }
-
     function formatLocalDateString(date) {
         const year = date.getFullYear();
         const month = String(date.getMonth() + 1).padStart(2, '0');
         const day = String(date.getDate()).padStart(2, '0');
         return `${year}-${month}-${day}`;
+    }
+
+    function parseDateString(dateStr) {
+        return new Date(`${dateStr}T12:00:00`);
+    }
+
+    function getEventDateString(event) {
+        if (event.startStr) {
+            return event.startStr.slice(0, 10);
+        }
+        return event.start ? formatLocalDateString(event.start) : null;
     }
 
     function formatDateHeading(date) {
@@ -117,11 +122,11 @@ document.addEventListener('DOMContentLoaded', function () {
         const dateSet = new Set();
 
         calendar.getEvents().forEach(event => {
-            if (event.start) {
-                dateSet.add(formatLocalDateString(event.start));
+            const eventDateStr = getEventDateString(event);
+            if (eventDateStr) {
+                dateSet.add(eventDateStr);
             }
         });
-
         return dateSet;
     }
 
@@ -151,12 +156,14 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     }
 
-    function renderSlotsForDate(clickedDate, calendar) {
-        selectedDateStr = formatLocalDateString(clickedDate);
+    function renderSlotsForDate(dateStr, calendar) {
+        const clickedDate = parseDateString(dateStr);
+
+        selectedDateStr = dateStr;
         updateSelectedDayHighlight();
 
         const allEvents = calendar.getEvents();
-        const matchingEvents = allEvents.filter(event => event.start && sameDay(event.start, clickedDate));
+        const matchingEvents = allEvents.filter(event => getEventDateString(event) === dateStr);
 
         selectedDate.innerHTML = "Times available for " + formatDateHeading(clickedDate);
         selectedDate.classList.remove('empty');
@@ -176,7 +183,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 <button type="button"
                         class="time-slot-button${isSelected}"
                         data-event-id="${event.id}">
-                    ${formatTimeOnly(event.start)}
+                    ${event.title || formatTimeOnly(event.start)}
                 </button>
             `;
         }).join('');
@@ -199,7 +206,7 @@ document.addEventListener('DOMContentLoaded', function () {
                 event.setProp('backgroundColor', '#46243f');
                 event.setProp('borderColor', '#46243f');
 
-                renderSlotsForDate(event.start, calendar);
+                renderSlotsForDate(getEventDateString(event), calendar);
             });
         });
     }
@@ -222,7 +229,7 @@ document.addEventListener('DOMContentLoaded', function () {
         },
 
         dateClick: function(info) {
-            renderSlotsForDate(info.date, calendar);
+            renderSlotsForDate(info.dateStr, calendar);
         },
 
         eventClick: function(info) {
@@ -239,7 +246,7 @@ document.addEventListener('DOMContentLoaded', function () {
             event.setProp('backgroundColor', '#46243f');
             event.setProp('borderColor', '#46243f');
 
-            renderSlotsForDate(event.start, calendar);
+            renderSlotsForDate(getEventDateString(event), calendar);
         },
 
         eventDidMount: function(info) {
@@ -265,7 +272,7 @@ document.addEventListener('DOMContentLoaded', function () {
             if (selectedEventId) {
                 const savedEvent = calendar.getEventById(selectedEventId);
                 if (savedEvent && savedEvent.start) {
-                    renderSlotsForDate(savedEvent.start, calendar);
+                    renderSlotsForDate(getEventDateString(savedEvent), calendar);
                 }
             }
         }
@@ -335,7 +342,7 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     .form-section {
-        background: #f7faf8;
+        background: #fff;
         border: 1px solid #dde8e1;
         border-radius: 14px;
         padding: 18px;
@@ -399,15 +406,16 @@ document.addEventListener('DOMContentLoaded', function () {
     }
 
     .fc .fc-button {
-        background: #244636;
-        border-color: #244636;
-        transition: background-color 0.2s ease;
+        background: #b85b84;
+        border-color: #8a3d5e;
+        border-radius: 10px;
+        transition: background-color 0.2s ease, border-color 0.2s ease;
     }
 
     .fc .fc-button:hover,
     .fc .fc-button:focus {
-        background: #1b3529;
-        border-color: #1b3529;
+        background: #8f3b61;
+        border-color: #6f2f47;
     }
 
     .fc .fc-daygrid-day.has-open-slots .fc-daygrid-day-frame {
@@ -422,7 +430,7 @@ document.addEventListener('DOMContentLoaded', function () {
         width: 10px;
         height: 10px;
         border-radius: 999px;
-        background: #244636;
+        background: #1b3529;
     }
 
     .fc .fc-event {
@@ -492,7 +500,7 @@ document.addEventListener('DOMContentLoaded', function () {
     .selected-slot-box {
         padding: 12px 14px;
         border-radius: 10px;
-        background: #e8f2ec;
+        background: #fff;
         border: 1px solid #b9d1c0;
         color: #1f2937;
         font-weight: 600;
@@ -545,16 +553,19 @@ document.addEventListener('DOMContentLoaded', function () {
 
     .booking-button {
         font-size: 16px;
-        font-weight: 600;
+        font-weight: 700;
         min-width: 220px;
         padding: 12px 22px;
-        border-radius: 8px;
-        background-color: #333;
+        border-radius: 10px;
+        border: 1px solid #8a3d5e;
+        background-color: #b85b84;
         color: #fff;
-        transition: background-color 0.2s ease;
+        transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
     .booking-button:hover {
-        background-color: #555;
+        background-color: #8f3b61;
+        border-color: #6f2f47;
+        transform: translateY(-1px);
     }
 
     .selected-calendar-day {

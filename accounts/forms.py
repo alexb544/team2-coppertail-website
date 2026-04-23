@@ -41,11 +41,12 @@ class ProfileUpdateForm(forms.ModelForm):
 class DogForm(forms.ModelForm):
     class Meta:
         model = Dog
-        fields = ["name", "breed", "age", "size", "notes"]
+        fields = ["name", "breed", "age", "image", "size", "notes"]
         widgets = {
             "name": forms.TextInput(attrs={"class": "form-control"}), 
             "breed": forms.TextInput(attrs={"class": "form-control"}),
             "age": forms.NumberInput(attrs={"class": "form-control"}), 
+            "image": forms.FileInput(attrs={"class": "form-control"}),
             "size": forms.TextInput(attrs={"class": "form-control"}),
             "notes": forms.Textarea(attrs={"rows": 2, "class": "form-control"}),
         }
@@ -67,6 +68,9 @@ class LoginForm(AuthenticationForm):
             'id': 'password',
         })
     )
+    
+    remember_me = forms.BooleanField(required=False)
+
 class ContactForm(forms.Form):
     name = forms.CharField(
         max_length=100, 
@@ -88,5 +92,3 @@ class ContactForm(forms.Form):
             'rows': 4
         })
     )
-
-    remember_me = forms.BooleanField(required=False)

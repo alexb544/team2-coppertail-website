@@ -7,16 +7,17 @@
         display: flex;
         min-height: 80vh;
         gap: 20px;
-        padding: 0;
+        padding: 18px 18px 18px 18px;
     }
 
     .sidebar {
         width: 300px;
         background-color: #fff;
-        border-radius: 12px;
+        border: 1px solid #dde8e1;
+        border-radius: 14px;
         padding: 25px;
         padding-bottom: 70px;
-        box-shadow: 10px 5px 8px rgba(0,0,0,0.08);
+        box-shadow: 10px 5px 8px rgba(0,0,0,0.06);
         display: flex;
         flex-direction: column;
         align-items: center;
@@ -29,7 +30,7 @@
         border-radius: 50%;
         object-fit: cover;
         background-color: #ddd;
-        margin-bottom: 15px;
+        margin-bottom: 10px;
     }
 
     .user-info {
@@ -38,8 +39,9 @@
     }
 
     .user-info h2 {
-        margin-bottom: 25px;
+        margin-bottom: 10px;
         color: #000000;
+        font-size: 1.3rem; color: #333; 
     }
 
     .user-info p {
@@ -56,64 +58,244 @@
     }
 
     .section-box {
-        background-color: #fff;
-        border-radius: 12px;
+        background: #fff;
+        border: 1px solid #dde8e1;
+        border-radius: 14px;
         padding: 25px;
         padding-top: 20px;
         padding-bottom: 70px;
-        box-shadow: 10px 5px 8px rgba(0,0,0,0.08);
+        box-shadow: 10px 5px 8px rgba(0, 0, 0, 0.06);
         position: relative;
         min-height: 220px;
     }
 
     .section-box h3 {
         margin-bottom: 20px;
-        font-size: 22px;
+        font-size: 1.3rem; color: #333; 
         color: #000000dc;
+        font-weight: 700;        
     }
 
     .appointments-list {
         display: flex;
-        flex-direction: row;
-        gap: 15px;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: flex-start;
     }
 
     .appointment-card {
-        padding: 15px;
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        background-color: #fafafa;
+        flex: 0 0 240px;
+        width: 240px;
+        padding: 0;
+        border: 1px solid #d7e3dc;
+        border-radius: 14px;
+        background: linear-gradient(180deg, #ffffff 0%, #f8c8dc75 100%);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
         text-align: left;
+        overflow: hidden;
+    }
+
+    .appointment-card-header {
+        padding: 14px 18px;
+        background-color: #F8C8DC;
+    }
+
+    .appointment-card h4 {
+        margin: 0;
+        font-size: 18px;
+        color: #1f2937;
+        text-align: center;
+    }
+
+    .appointment-card-body {
+        padding: 18px;
+    }
+
+    .appointment-card-actions {
+        display: flex;
+        justify-content: flex-end;
+        padding-top: 10px;
+        border-top: 1px solid #e3ece7;
+        position: relative;
     }
 
     .appointment-card p {
-        margin-bottom: 6px;
+        margin: 0 0 8px;
         text-align: left;
+        color: #374151;
+    }
+
+    .appointment-card p:last-of-type {
+        margin-bottom: 0;
+    }
+
+    .appointment-detail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+        border-top: 1px solid #e3ece7;
+    }
+
+    .appointment-card-body .appointment-detail:first-child {
+        border-top: none;
+        padding-top: 0;
+    }
+
+    .appointment-detail strong {
+        color: #244636;
+    }
+
+    .appointment-value {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .appointment-cancel-button {
+        padding: 10px 14px;
+        border: 1px solid #d9b1bf;
+        border-radius: 10px;
+        background: #f7d8e4;
+        color: #6f2f47;
+        font-size: 13px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s ease, color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
+    }
+
+    .appointment-cancel-button:hover {
+        background: #efc5d6;
+        border-color: #c786a0;
+        color: #5a2539;
+        transform: translateY(-1px);
+    }
+
+    .appointment-confirm-box {
+        position: absolute;
+        right: 0;
+        bottom: calc(100% + 10px);
+        width: 210px;
+        padding: 12px;
+        border: 1px solid #e6c7d3;
+        border-radius: 12px;
+        background: #fffafc;
+        box-shadow: 0 12px 24px rgba(70, 36, 63, 0.12);
+        opacity: 0;
+        visibility: hidden;
+        transform: translateY(6px);
+        transition: opacity 0.18s ease, transform 0.18s ease, visibility 0.18s ease;
+        z-index: 5;
+    }
+
+    .appointment-confirm-box.is-visible {
+        opacity: 1;
+        visibility: visible;
+        transform: translateY(0);
+    }
+
+    .appointment-confirm-box p {
+        margin: 0 0 10px;
+        font-size: 13px;
+        line-height: 1.4;
+        color: #4b5563;
+    }
+
+    .appointment-confirm-actions {
+        display: flex;
+        justify-content: flex-end;
+        gap: 8px;
+    }
+
+    .appointment-confirm-dismiss,
+    .appointment-confirm-submit {
+        border-radius: 10px;
+        padding: 9px 12px;
+        font-size: 12px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: background-color 0.2s ease, border-color 0.2s ease, color 0.2s ease, transform 0.2s ease;
+    }
+
+    .appointment-confirm-dismiss {
+        border: 1px solid #d9b1bf;
+        background: #f7d8e4;
+        color: #6f2f47;
+    }
+
+    .appointment-confirm-submit {
+        border: 1px solid #8a3d5e;
+        background: #b85b84;
+        color: #ffffff;
+    }
+
+    .appointment-confirm-dismiss:hover {
+        background: #efc5d6;
+        border-color: #c786a0;
+        color: #5a2539;
+        transform: translateY(-1px);
+    }
+
+    .appointment-confirm-submit:hover {
+        background: #8f3b61;
+        border-color: #6f2f47;
+        transform: translateY(-1px);
     }
 
     .dogs-grid {
-        display: grid;
-        grid-template-columns: repeat(4, 1fr);
-        gap: 20px;
+        display: flex;
+        flex-wrap: wrap;
+        gap: 12px;
+        align-items: flex-start;
     }
 
     .dog-card {
-        border: 1px solid #ddd;
-        border-radius: 10px;
-        padding: 15px;
-        background-color: #fafafa;
-        text-align: right;
-        max-width: 250px;
+        flex: 0 0 240px;
+        width: 240px;
+        border: 1px solid #d7e3dc;
+        border-radius: 14px;
+        padding: 18px;
+        background: linear-gradient(180deg, #ffffff 0%, #f6faf7 100%);
+        box-shadow: 0 8px 18px rgba(0, 0, 0, 0.06);
+        text-align: left;
+        display: flex;
+        flex-direction: column;
     }
     
     .dog-card h4 {
+        margin: 0 0 14px;
+        font-size: 18px;
+        color: #1f2937;
         text-align: center;
-        margin-bottom: 10px;
     }
 
     .dog-card p {
-        text-align: left;
-        padding: 5px;
+        margin: 0;
+        color: #374151;
+    }
+
+    .dog-card p + p {
+        border-top: 1px solid #e3ece7;
+    }
+
+    .dog-detail {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+    }
+
+    .dog-detail strong {
+        color: #244636;
+    }
+
+    .dog-value {
+        font-weight: 600;
+        color: #1f2937;
+    }
+
+    .dog-card .action-button {
+        margin-top: auto;
+        align-self: flex-end;
     }
 
     .dog-card img {
@@ -123,7 +305,8 @@
         object-fit: cover;
         border-radius: 10px;
         background-color: #ddd;
-        margin-bottom: 12px;
+        display: block;
+        margin: 0 auto 14px;
     }
 
     .empty-message {
@@ -139,24 +322,42 @@
 
     .action-button {
         display: inline-block;
-        padding: 10px 16px;
-        background-color: #333;
+        padding: 12px 18px;
+        background-color: #b85b84;
         color: #fff;
         text-decoration: none;
-        border-radius: 8px;
+        border-radius: 10px;
         font-size: 14px;
-        transition: background-color 0.2s ease;
+        font-weight: 700;
+        border: 1px solid #8a3d5e;
+        transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
 
     .action-button:hover {
-        background-color: #555;
+        background-color: #8f3b61;
+        border-color: #6f2f47;
+        transform: translateY(-1px);
     }
 
     .summary-row {
         display: flex;
+        justify-content: space-between;
+        align-items: flex-start;
+        gap: 12px;
         padding: 12px 0;
         border-top: 1px solid #e3ece7;
         color: #33413b;
+    }
+
+    .summary-label {
+        font-weight: 700;
+        color: #244636;
+        white-space: nowrap;
+    }
+
+    .summary-value {
+        text-align: right;
+        margin-left: auto;
     }
 
     @media (max-width: 900px) {
@@ -166,14 +367,11 @@
         .sidebar {
             width: 100%;
         }
-        .dogs-grid {
-            grid-template-columns: repeat(2, 1fr);
-        }
     }
 
     @media (max-width: 600px) {
         .dogs-grid {
-            grid-template-columns: 1fr;
+            justify-content: center;
         }
 
         .section-action {
@@ -196,19 +394,29 @@
         <div class="user-info">
             <h2><b>{{ user.get_full_name|default:user.username }}</b></h2>
             <div class="summary-row"> 
-                <span><strong>Username: </strong>{{ user.username }}</span>
+                <span class="summary-label">Username</span>
+                <span class="summary-value">{{ user.username }}</span>
             </div>
             <div class="summary-row"> 
-                <span><strong>Phone:</strong> {{ profile.phone_number }}</span>
+                <span class="summary-label">Phone</span>
+                <span class="summary-value">
+                    {% if profile.phone_number and profile.phone_number|length == 10 %}
+                        ({{ profile.phone_number|slice:":3" }}) {{ profile.phone_number|slice:"3:6" }}-{{ profile.phone_number|slice:"6:" }}
+                    {% else %}
+                        {{ profile.phone_number }}
+                    {% endif %}
+                </span>
             </div>
             <div class="summary-row"> 
-                <span><strong>Email:</strong> {{ user.email }}</span>
+                <span class="summary-label">Email</span>
+                <span class="summary-value">{{ user.email }}</span>
             </div>
             <div class="summary-row"> 
-                <span class="text-left"><strong>Address:</strong> {{ profile.address }}</span>
+                <span class="summary-label">Address</span>
+                <span class="summary-value">{{ profile.address }}</span>
             </div>
             <div class="section-action">
-                <a href="{% url 'accounts:edit_account' %}" class="action-button">Edit your profile</a>
+                <a href="{% url 'accounts:edit_account' %}" class="action-button">Edit Profile</a>
             </div>
         </div>
     </aside>
@@ -222,9 +430,32 @@
                 <div class="appointments-list">
                     {% for booking in bookings %}
                         <div class="appointment-card">
-                            <p><strong><center>{{ booking.dog.name }}</center></strong></p>
-                            <p><strong>Date:</strong> {{ booking.slot.start_time.date }}</p>
-                            <p><strong>Time:</strong> {{ booking.slot.start_time.time }}</p>
+                            <div class="appointment-card-header">
+                                <h4><strong>{{ booking.dog.name }}</strong></h4>
+                            </div>
+                            <div class="appointment-card-body">
+                                <div class="appointment-detail">
+                                    <strong>Date</strong>
+                                    <span class="appointment-value">{{ booking.slot.start_time|date:"F j" }}</span>
+                                </div>
+                                <div class="appointment-detail">
+                                    <strong>Time</strong>
+                                    <span class="appointment-value">{{ booking.slot.start_time|date:"g:i A" }}</span>
+                                </div>
+                                <div class="appointment-card-actions">
+                                    <div class="appointment-confirm-box" data-cancel-box>
+                                        <p>Cancel this appointment? <br></br> This action will remove it from your account.</p>
+                                        <div class="appointment-confirm-actions">
+                                            <button type="button" class="appointment-confirm-dismiss" data-cancel-dismiss>Keep</button>
+                                            <form method="post" action="{% url 'booking:booking_cancel' booking.id %}">
+                                                {% csrf_token %}
+                                                <button type="submit" class="appointment-confirm-submit">Confirm</button>
+                                            </form>
+                                        </div>
+                                    </div>
+                                    <button type="button" class="appointment-cancel-button" data-cancel-toggle>Cancel</button>
+                                </div>
+                            </div>
                         </div>
                     {% endfor %}
                 </div>
@@ -233,7 +464,7 @@
             {% endif %}
 
             <div class="section-action">
-                <a href="{% url 'booking:booking_create' %}" class="action-button">Book an Appointment</a>
+                <a href="{% url 'booking:booking_create' %}" class="action-button">Book Appointment</a>
             </div>
         </section>
 
@@ -258,9 +489,15 @@
                                 </div>
                             {% endif %}
                             <h4><strong>{{ dog.name }}</strong></h4>
-                            <p><strong>Breed:</strong> {{ dog.breed }}</p>
-                            <p><strong>Age:</strong> {{ dog.age }}</p>
-                            <a href="{% url 'accounts:edit_dog' dog.id %}" class="action-button">Edit Dog</a>
+                            <p class="dog-detail">
+                                <strong>Breed</strong>
+                                <span class="dog-value">{{ dog.breed }}</span>
+                            </p>
+                            <p class="dog-detail">
+                                <strong>Age</strong>
+                                <span class="dog-value">{{ dog.age }}</span>
+                            </p>
+                            <a href="{% url 'accounts:edit_dog' dog.id %}" class="action-button">Edit</a>
                         </div>
                     {% endfor %}
                 </div>
@@ -274,5 +511,44 @@
 
     </main>
 </div>
+
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    const cancelToggles = document.querySelectorAll('[data-cancel-toggle]');
+
+    cancelToggles.forEach(function(toggleButton) {
+        toggleButton.addEventListener('click', function () {
+            const actions = toggleButton.closest('.appointment-card-actions');
+            const confirmBox = actions.querySelector('[data-cancel-box]');
+            const isVisible = confirmBox.classList.contains('is-visible');
+
+            document.querySelectorAll('[data-cancel-box].is-visible').forEach(function(openBox) {
+                openBox.classList.remove('is-visible');
+            });
+
+            if (!isVisible) {
+                confirmBox.classList.add('is-visible');
+            }
+        });
+    });
+
+    document.querySelectorAll('[data-cancel-dismiss]').forEach(function(dismissButton) {
+        dismissButton.addEventListener('click', function () {
+            const confirmBox = dismissButton.closest('[data-cancel-box]');
+            confirmBox.classList.remove('is-visible');
+        });
+    });
+
+    document.addEventListener('click', function (event) {
+        if (event.target.closest('.appointment-card-actions')) {
+            return;
+        }
+
+        document.querySelectorAll('[data-cancel-box].is-visible').forEach(function(openBox) {
+            openBox.classList.remove('is-visible');
+        });
+    });
+});
+</script>
 
 {% endblock %}

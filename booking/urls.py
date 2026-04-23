@@ -8,4 +8,5 @@ urlpatterns = [
     path('slots-json/', views.booking_slots_json, name='booking_slots_json'),
     path('confirm/', views.booking_confirm, name='booking_confirm'),
     path('success/<int:booking_id>/', views.booking_success, name='booking_success'),
+    path('cancel/<int:booking_id>/', views.booking_cancel, name='booking_cancel'),
 ]

@@ -8,7 +8,7 @@
 <div class="mt-10 mx-10 md:mx-25 lg:mx-50 xl:mx-75">
     <h2 class = "mb-5 flex justify-center font-semibold text-xl">What We Offer</h2>
         {% for service in services %}
-        <div class="bg-green-100 rounded-lg px-5 py-3 mb-10">
+        <div class="bg-[#f8c8dc75] rounded-lg px-5 py-3 mb-10">
             <h3 class="text-lg">{{ service.service_name }}</h3>
             <div class="flex justify-between">
                 <div>{{ service.description }}</div>
@@ -16,7 +16,7 @@
             </div>
         </div>
         {% endfor %}
-        <div class="flex justify-center"><a class="border bg-green-100 px-1 text-lg" href="{% url 'booking:booking_create' %}">Book now!</a></div>
+        <div class="flex justify-center"><a class="coppertail-button text-lg" href="{% url 'booking:booking_create' %}">Book now!</a></div>
 </div>
 {% else %}
 <div class="mt-10 mx-10 md:mx-25 lg:mx-50 xl:mx-75">
@@ -26,5 +26,7 @@
     </div>
 </div>
 {% endif %}
+
+<br><br>
 
 {% endblock %}

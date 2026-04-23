@@ -44,22 +44,38 @@
 
     .btn {
         display: inline-block;
-        padding: 10px 16px;
-        border-radius: 8px;
+        padding: 12px 18px;
+        border-radius: 10px;
         text-decoration: none;
-        border: none;
+        border: 1px solid #8a3d5e;
         cursor: pointer;
         font-size: 14px;
+        font-weight: 700;
+        transition: background-color 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
     }
 
     .btn-save {
-        background: #333;
+        background: #b85b84;
         color: white;
     }
 
     .btn-cancel {
-        background: #ddd;
-        color: #222;
+        border-color: #d9b1bf;
+        background: #f7d8e4;
+        color: #6f2f47;
+    }
+
+    .btn-save:hover {
+        background: #8f3b61;
+        border-color: #6f2f47;
+        transform: translateY(-1px);
+    }
+
+    .btn-cancel:hover {
+        background: #efc5d6;
+        border-color: #c786a0;
+        color: #5a2539;
+        transform: translateY(-1px);
     }
 
     .errorlist {
@@ -72,7 +88,7 @@
 <div class="form-container">
     <h1>Add a Dog</h1>
 
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         {% csrf_token %}
 
         <div class="form-group">
@@ -91,6 +107,12 @@
             <label for="{{ form.age.id_for_label }}">Age</label>
             {{ form.age }}
             {{ form.age.errors }}
+        </div>
+
+        <div class="form-group">
+            <label for="{{ form.image.id_for_label }}">Profile Picture</label>
+            {{ form.image }}
+            {{ form.image.errors }}
         </div>
 
         <div class="form-group">

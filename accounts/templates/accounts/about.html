@@ -2,10 +2,10 @@
 
 {% block content %}
 <div class="bg-white">
-  <div class="relative py-16 bg-green-50">
+  <div class="relative py-16 bg-[#fff4f8]">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
       <h1 class="text-4xl font-extrabold tracking-tight text-gray-900 sm:text-5xl md:text-6xl">
-        About <span class="text-black-600">Coppertail</span> Grooming
+        About <span class="text-black">Coppertail</span> Grooming
       </h1>
       <p class="mt-6 max-w-2xl mx-auto text-xl text-gray-500">
         Providing premium, stress-free grooming services for your furry friends right here in Lakeland, Florida.
@@ -18,7 +18,12 @@
       <div class="text-lg max-w-prose mx-auto">
         <h2 class="text-3xl text-gray-900 font-semibold tracking-wide uppercase text-center">Our Mission</h2>
         <p class="mt-8 text-gray-500 leading-8">
-        Coppertail Grooming Co is an elite all breed dog grooming boutique.
+          Since 20XX, we have been caring for the fur babies of Lakeland
+          with the utmost care and love. As an elite doggie grooming boutique, we offer a large variety of services
+          for all types of breeds and tastes.<br><br>Our founder, Cassidy, loves getting to know both you and your lovable
+          ball of fur.
+          <br><br>If you have any questions about services or products, contact Alex at alexblake544@gmail.com
+          <br><br><br><br>
         </p>
       </div>
     </div>
@@ -27,7 +32,7 @@
   <div class="bg-gray-50 py-16">
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
       <div class="lg:text-center">
-        <h2 class="text-base text-green-600 font-semibold tracking-wide uppercase">Get in Touch</h2>
+        <h2 class="text-base text-[#a64d73] font-semibold tracking-wide uppercase">Get in Touch</h2>
         <p class="mt-2 text-3xl leading-8 font-extrabold tracking-tight text-gray-900 sm:text-4xl">
           Want more information?
         </p>
@@ -36,10 +41,10 @@
           We're here to help!
         </p>
         <div class="mt-10 flex justify-center gap-4">
-            <a href="{% url 'accounts:contact' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-white bg-green-600 hover:bg-green-700 md:py-4 md:text-lg md:px-10">
+            <a href="{% url 'accounts:contact' %}" class="coppertail-button text-base md:text-lg md:px-10 md:py-4">
                 Contact Us
             </a>
-            <a href="{% url 'booking:booking_create' %}" class="px-8 py-3 border border-transparent text-base font-medium rounded-md text-gray-700 bg-gray-100 hover:bg-gray-200 md:py-4 md:text-lg md:px-10">
+            <a href="{% url 'booking:booking_create' %}" class="coppertail-button-soft text-base md:text-lg md:px-10 md:py-4">
                 Book a Session
             </a>
         </div>
